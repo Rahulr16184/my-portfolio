@@ -16,14 +16,16 @@ export default function AdminPage() {
       id: `section-${Date.now()}`,
       type: "hero", // Default to 'hero', we can make this selectable later
       name: `New Section ${sections.length + 1}`,
-      content: {},
+      content: {
+        title: "Welcome to your new section!",
+        description: "You can edit this content."
+      },
     };
     setSections((prevSections) => [...prevSections, newSection]);
   };
 
   if (isPreview) {
-    // We will pass the sections to the public page in the next step
-    return <PublicPortfolioPage />;
+    return <PublicPortfolioPage sections={sections} />;
   }
 
   return (
