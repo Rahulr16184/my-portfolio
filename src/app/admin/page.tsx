@@ -47,7 +47,7 @@ export default function AdminPage() {
   return (
     <div className="flex flex-col">
       <Toolbar onAddSection={handleAddSection} />
-      <div className="flex-1 p-4 md:p-6 lg:p-8">
+      <div className="flex-1 p-4 md:p-6 lg:p-8 pt-24">
         <div className="container mx-auto">
           {sections.length === 0 ? (
             <div className="border-2 border-dashed border-muted rounded-lg min-h-[400px] p-8 flex items-center justify-center">
