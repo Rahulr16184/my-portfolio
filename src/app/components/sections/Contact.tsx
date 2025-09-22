@@ -1,3 +1,4 @@
+import React from "react";
 import { contact } from "@/lib/data";
 import Section from "./Section";
 import { Button } from "@/components/ui/button";
