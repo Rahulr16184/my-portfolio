@@ -1,3 +1,29 @@
+
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "profile-photo",
+      "description": "A professional headshot of John Doe.",
+      "imageUrl": "https://picsum.photos/seed/101/200/200",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "project-1",
+      "description": "Screenshot of the TRACEIN Attendance System dashboard.",
+      "imageUrl": "https://picsum.photos/seed/201/600/400",
+      "imageHint": "dashboard ui"
+    },
+    {
+      "id": "project-2",
+      "description": "Homepage of the E-commerce Platform.",
+      "imageUrl": "https://picsum.photos/seed/202/600/400",
+      "imageHint": "website shopping"
+    },
+    {
+      "id": "project-3",
+      "description": "Screenshot of the PortfolioForge application.",
+      "imageUrl": "https://picsum.photos/seed/203/600/400",
+      "imageHint": "portfolio website"
+    }
+  ]
 }
