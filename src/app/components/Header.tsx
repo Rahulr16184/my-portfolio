@@ -1,12 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Key } from 'lucide-react';
+import { Key, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { adminCredentials } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
@@ -15,9 +26,13 @@ import { ThemeSwitcher } from '@/app/components/ThemeSwitcher';
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isLogoutAlertOpen, setIsLogoutAlertOpen] = useState(false);
   const [secretCode, setSecretCode] = useState('');
   const router = useRouter();
+  const pathname = usePathname();
   const { toast } = useToast();
+
+  const isAdminPage = pathname.startsWith('/admin');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +54,13 @@ const Header = () => {
       });
     }
   };
+  
+  const handleLogout = () => {
+    // In a real app, you would clear the user's session/token here
+    setIsLogoutAlertOpen(false);
+    router.push("/");
+  };
+
 
   return (
     <>
@@ -49,16 +71,41 @@ const Header = () => {
         )}
       >
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-          <div className="flex-1"></div>
+          <div className="flex-1 flex items-center justify-start">
+            {isAdminPage && (
+              <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
+                <AlertDialogTrigger asChild>
+                   <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
+                    <LogOut className="h-5 w-5" />
+                    <span className="sr-only">Logout</span>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      You will be redirected to the public portfolio page.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+          </div>
           <h1 className="flex-1 text-center font-poppins font-bold text-xl uppercase text-primary">
             MY PORTFOLIO
           </h1>
           <nav className="flex flex-1 items-center justify-end gap-2">
             <ThemeSwitcher />
-            <Button variant="ghost" size="icon" onClick={() => setIsDialogOpen(true)} className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
-              <Key className="h-5 w-5" />
-              <span className="sr-only">Admin Login</span>
-            </Button>
+            {!isAdminPage && (
+              <Button variant="ghost" size="icon" onClick={() => setIsDialogOpen(true)} className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
+                <Key className="h-5 w-5" />
+                <span className="sr-only">Admin Login</span>
+              </Button>
+            )}
           </nav>
         </div>
       </header>
