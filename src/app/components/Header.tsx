@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -57,6 +57,9 @@ const Header = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+              </SheetHeader>
               <div className="grid gap-4 py-6">
                 <Link href="/" className="flex items-center gap-2 font-bold text-lg">
                   <Code className="h-6 w-6 text-primary" />
