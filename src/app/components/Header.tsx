@@ -45,16 +45,16 @@ const Header = () => {
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          isScrolled ? "bg-background/80 backdrop-blur-sm border-b" : "bg-transparent"
+          isScrolled ? "bg-header-background/80 backdrop-blur-sm border-b" : "bg-header-background"
         )}
       >
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary">
             <Code className="h-6 w-6 text-primary" />
             <span className="font-headline">PortfolioForge</span>
           </Link>
           <nav className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => setIsDialogOpen(true)}>
+            <Button variant="ghost" size="icon" onClick={() => setIsDialogOpen(true)} className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
               <Key className="h-5 w-5" />
               <span className="sr-only">Admin Login</span>
             </Button>
