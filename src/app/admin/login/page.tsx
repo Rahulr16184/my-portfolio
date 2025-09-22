@@ -109,7 +109,7 @@ export default function AdminLoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                 Login
               </Button>
             </form>
