@@ -11,6 +11,7 @@ import { Code, Key } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { adminCredentials } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
+import { ThemeSwitcher } from '@/app/components/ThemeSwitcher';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -54,6 +55,7 @@ const Header = () => {
             <span className="font-headline">PortfolioForge</span>
           </Link>
           <nav className="flex items-center gap-2">
+            <ThemeSwitcher />
             <Button variant="ghost" size="icon" onClick={() => setIsDialogOpen(true)} className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
               <Key className="h-5 w-5" />
               <span className="sr-only">Admin Login</span>
