@@ -3,7 +3,6 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/app/components/Header';
-import Footer from '@/app/components/Footer';
 import { ThemeProvider } from '@/app/components/ThemeProvider';
 import { PreviewProvider } from '@/hooks/use-preview';
 
@@ -35,7 +34,6 @@ export default function RootLayout({
           <PreviewProvider>
             <Header />
             <main className="flex-1">{children}</main>
-            <Footer />
             <Toaster />
           </PreviewProvider>
         </ThemeProvider>
