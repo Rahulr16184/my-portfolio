@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePreview } from "@/hooks/use-preview";
+import PublicPortfolioPage from "@/app/page";
 
 export default function AdminPage() {
-  const router = useRouter();
+  const { isPreview } = usePreview();
+
+  if (isPreview) {
+    return <PublicPortfolioPage />;
+  }
 
   return (
     <>
@@ -12,7 +16,7 @@ export default function AdminPage() {
         <div className="flex flex-col items-center justify-center space-y-8">
           <div className="text-center">
             <h1 className="text-4xl font-headline font-bold tracking-tight sm:text-6xl">Admin Dashboard</h1>
-            <p className="mt-6 text-lg leading-8 text-muted-foreground">Welcome to the admin dashboard!</p>
+            <p className="mt-6 text-lg leading-8 text-muted-foreground">Welcome to the admin dashboard! This is where you edit your portfolio.</p>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
 import { ThemeProvider } from '@/app/components/ThemeProvider';
+import { PreviewProvider } from '@/hooks/use-preview';
 
 export const metadata: Metadata = {
   title: 'PortfolioForge',
@@ -31,10 +32,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <Toaster />
+          <PreviewProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <Toaster />
+          </PreviewProvider>
         </ThemeProvider>
       </body>
     </html>

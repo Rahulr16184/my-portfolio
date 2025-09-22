@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -22,26 +22,34 @@ import { cn } from '@/lib/utils';
 import { adminCredentials } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeSwitcher } from '@/app/components/ThemeSwitcher';
+import { usePreview } from '@/hooks/use-preview';
 
 const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isLogoutAlertOpen, setIsLogoutAlertOpen] = useState(false);
-  const [secretCode, setSecretCode] = useState('');
-  const [isPreview, setIsPreview] = useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [isLogoutAlertOpen, setIsLogoutAlertOpen] = React.useState(false);
+  const [secretCode, setSecretCode] = React.useState('');
+  const { isPreview, setIsPreview } = usePreview();
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
 
   const isAdminPage = pathname.startsWith('/admin');
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  // Reset preview when leaving admin pages
+  React.useEffect(() => {
+    if (!isAdminPage) {
+      setIsPreview(false);
+    }
+  }, [isAdminPage, setIsPreview]);
 
   const handleSecretCodeSubmit = () => {
     if (secretCode === adminCredentials.secretCode) {
