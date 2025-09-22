@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Key, LogOut } from 'lucide-react';
+import { Key, LogOut, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { adminCredentials } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
@@ -28,6 +28,7 @@ const Header = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLogoutAlertOpen, setIsLogoutAlertOpen] = useState(false);
   const [secretCode, setSecretCode] = useState('');
+  const [isPreview, setIsPreview] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
@@ -71,28 +72,34 @@ const Header = () => {
         )}
       >
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-          <div className="flex-1 flex items-center justify-start">
+          <div className="flex-1 flex items-center justify-start gap-2">
             {isAdminPage && (
-              <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
-                <AlertDialogTrigger asChild>
-                   <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
-                    <LogOut className="h-5 w-5" />
-                    <span className="sr-only">Logout</span>
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      You will be redirected to the public portfolio page.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <>
+                <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
+                      <LogOut className="h-5 w-5" />
+                      <span className="sr-only">Logout</span>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        You will be redirected to the public portfolio page.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <Button variant="ghost" size="icon" onClick={() => setIsPreview(!isPreview)} className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
+                  {isPreview ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  <span className="sr-only">Toggle Preview</span>
+                </Button>
+              </>
             )}
           </div>
           <h1 className="flex-1 text-center font-poppins font-bold text-xl uppercase text-primary">
