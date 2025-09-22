@@ -1,19 +1,10 @@
-import Hero from '@/app/components/sections/Hero';
-import About from '@/app/components/sections/About';
-import Skills from '@/app/components/sections/Skills';
-import Projects from '@/app/components/sections/Projects';
-import Experience from '@/app/components/sections/Experience';
-import Contact from '@/app/components/sections/Contact';
-
 export default function Home() {
   return (
-    <>
-      <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Experience />
-      <Contact />
-    </>
+    <div className="container mx-auto h-screen flex items-center justify-center text-center">
+      <div>
+        <h1 className="text-6xl font-headline font-bold">Welcome to PortfolioForge</h1>
+        <p className="mt-4 text-xl text-muted-foreground">The public portfolio page.</p>
+      </div>
+    </div>
   );
 }

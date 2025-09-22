@@ -15,6 +15,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -23,9 +24,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('font-body antialiased')}>
-        <Header />
+          <Header />
         <main className="flex-1">{children}</main>
-        <Footer />
+          <Footer />
         <Toaster />
       </body>
     </html>
