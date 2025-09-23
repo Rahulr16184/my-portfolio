@@ -96,6 +96,45 @@
     left: 100%;
   }
 
+  .animated-section-title {
+    position: relative;
+    padding-bottom: 0.5rem;
+    background: linear-gradient(90deg, hsl(var(--foreground)), hsl(var(--accent)), hsl(var(--foreground)));
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: text-shimmer 5s linear infinite;
+  }
+
+  .animated-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, hsl(var(--accent)), transparent);
+    background-size: 200% auto;
+    animation: underline-shimmer 4s linear infinite;
+  }
+
+  @keyframes text-shimmer {
+    to {
+      background-position: 200% center;
+    }
+  }
+
+  @keyframes underline-shimmer {
+    0% {
+      background-position: -100% center;
+    }
+    100% {
+      background-position: 100% center;
+    }
+  }
+
   @keyframes fade-in-up {
     from {
       opacity: 0;
