@@ -77,6 +77,7 @@ const Header = () => {
   const { toast } = useToast();
 
   const isAdminPage = pathname.startsWith('/admin');
+  const isLoginPage = pathname === '/admin/login';
 
   React.useEffect(() => {
     if (!isAdminPage) {
@@ -116,7 +117,7 @@ const Header = () => {
     }
   }
 
-  const paddingTop = isAdminPage ? 'pt-[113px]' : 'pt-16';
+  const paddingTop = isAdminPage && !isLoginPage ? 'pt-[113px]' : 'pt-16';
 
   return (
     <>
@@ -175,7 +176,7 @@ const Header = () => {
             )}
           </nav>
         </div>
-        {isAdminPage && (
+        {isAdminPage && !isLoginPage && (
           <div className="container mx-auto border-b h-[49px] flex items-center">
             <AdminNav />
           </div>
@@ -187,7 +188,7 @@ const Header = () => {
           <DialogHeader>
             <DialogTitle>Enter Secret Code</DialogTitle>
             <DialogDescription>
-              To access the admin login page, please enter the secret code.
+              To access the admin login page, please enter the secret code. This provides an initial layer of security.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
