@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -48,7 +49,7 @@ export default function AdminLoginPage() {
         title: "Login Successful",
         description: "Redirecting to admin dashboard...",
       });
-      router.push("/admin");
+      router.push("/admin/profile");
     } else {
       toast({
         variant: "destructive",
