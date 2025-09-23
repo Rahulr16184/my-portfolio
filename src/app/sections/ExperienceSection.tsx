@@ -7,7 +7,7 @@ interface ExperienceSectionProps {
 
 export default function ExperienceSection({ data }: ExperienceSectionProps) {
     return (
-        <section id="experience" className="fade-in-up" style={{ animationDelay: '0.5s' }}>
+        <section id="experience" className="fade-in-up section-padding" style={{ animationDelay: '0.5s' }}>
             <h2 className="text-3xl font-bold font-headline mb-12 text-center">Work Experience</h2>
             <div className="relative border-l-2 border-primary/20 pl-8 space-y-12">
                 {data.map((exp) => (

@@ -9,7 +9,7 @@ interface SkillsSectionProps {
 
 export default function SkillsSection({ data }: SkillsSectionProps) {
     return (
-        <section id="skills" className="fade-in-up" style={{ animationDelay: '0.3s' }}>
+        <section id="skills" className="fade-in-up section-padding" style={{ animationDelay: '0.3s' }}>
             <h2 className="text-3xl font-bold font-headline mb-12 text-center">Skills</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {Object.entries(data).map(([category, skills], categoryIndex) => (

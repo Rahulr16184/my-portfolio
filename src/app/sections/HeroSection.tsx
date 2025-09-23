@@ -9,7 +9,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ data }: HeroSectionProps) {
     return (
-        <section id="home" className="text-center flex flex-col items-center">
+        <section id="home" className="text-center flex flex-col items-center section-padding">
             {data.profilePhoto && (
                 <div className="fade-in-up">
                     <Image

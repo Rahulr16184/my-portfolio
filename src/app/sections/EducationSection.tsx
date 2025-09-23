@@ -7,7 +7,7 @@ interface EducationSectionProps {
 
 export default function EducationSection({ data }: EducationSectionProps) {
     return (
-        <section id="education" className="fade-in-up" style={{ animationDelay: '0.6s' }}>
+        <section id="education" className="fade-in-up section-padding" style={{ animationDelay: '0.6s' }}>
             <h2 className="text-3xl font-bold font-headline mb-12 text-center">Education</h2>
             <div className="relative border-l-2 border-primary/20 pl-8 space-y-12">
                 {data.map((edu) => (

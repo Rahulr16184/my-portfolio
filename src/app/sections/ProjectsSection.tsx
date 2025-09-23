@@ -12,7 +12,7 @@ interface ProjectsSectionProps {
 
 export default function ProjectsSection({ data }: ProjectsSectionProps) {
     return (
-        <section id="projects" className="fade-in-up" style={{ animationDelay: '0.4s' }}>
+        <section id="projects" className="fade-in-up section-padding" style={{ animationDelay: '0.4s' }}>
             <h2 className="text-3xl font-bold font-headline mb-12 text-center">Projects</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {data.map((project) => (

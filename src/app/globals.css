@@ -64,6 +64,10 @@
 }
 
 @layer utilities {
+  .section-padding {
+    scroll-margin-top: 113px;
+  }
+  
   .fade-in-up {
     animation: fade-in-up 0.8s ease-out both;
   }

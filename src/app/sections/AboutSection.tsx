@@ -8,7 +8,7 @@ interface AboutSectionProps {
 
 export default function AboutSection({ data }: AboutSectionProps) {
     return (
-        <section id="about" className="fade-in-up" style={{ animationDelay: '0.2s' }}>
+        <section id="about" className="fade-in-up section-padding" style={{ animationDelay: '0.2s' }}>
             <h2 className="text-3xl font-bold font-headline mb-8 text-center">About Me</h2>
             <p className="whitespace-pre-line text-lg text-center max-w-3xl mx-auto leading-relaxed">{data.bio}</p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
