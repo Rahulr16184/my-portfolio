@@ -2,11 +2,18 @@
 "use client";
 
 import AdminLayout from "../layout";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -18,13 +25,17 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
-import { Save } from "lucide-react";
+import { Save, PlusCircle, Trash2 } from "lucide-react";
+
+const socialLinkSchema = z.object({
+  id: z.string(),
+  platform: z.enum(["linkedin", "github", "twitter"]),
+  url: z.string().url("Invalid URL format"),
+});
 
 const contactSchema = z.object({
   email: z.string().email("Invalid email address"),
-  linkedin: z.string().url().or(z.literal("")).optional(),
-  github: z.string().url().or(z.literal("")).optional(),
-  twitter: z.string().url().or(z.literal("")).optional(),
+  socials: z.array(socialLinkSchema),
 });
 
 export default function ContactPage() {
@@ -36,11 +47,24 @@ export default function ContactPage() {
     values: portfolio.contact,
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "socials",
+  });
+
   const onSubmit = (data: z.infer<typeof contactSchema>) => {
     updateContact(data);
     toast({
       title: "Success",
       description: "Contact information updated successfully.",
+    });
+  };
+
+  const addSocialLink = () => {
+    append({
+      id: `social-${Date.now()}`,
+      platform: "linkedin",
+      url: "",
     });
   };
 
@@ -67,46 +91,69 @@ export default function ContactPage() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="linkedin"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>LinkedIn URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://linkedin.com/in/..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div>
+                <FormLabel>Social Links</FormLabel>
+                <div className="space-y-4 mt-2">
+                  {fields.map((field, index) => (
+                    <Card key={field.id} className="p-4 bg-muted/50">
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <FormField
+                          control={form.control}
+                          name={`socials.${index}.platform`}
+                          render={({ field }) => (
+                            <FormItem className="w-full sm:w-1/3">
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select a platform" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="linkedin">LinkedIn</SelectItem>
+                                  <SelectItem value="github">GitHub</SelectItem>
+                                  <SelectItem value="twitter">Twitter/X</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`socials.${index}.url`}
+                          render={({ field }) => (
+                            <FormItem className="flex-grow">
+                              <FormControl>
+                                <Input placeholder="https://..." {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => remove(index)}
+                          className="self-end"
+                        >
+                          <Trash2 className="text-destructive" />
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addSocialLink}
+                  >
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Social Link
+                  </Button>
+                </div>
+              </div>
 
-              <FormField
-                control={form.control}
-                name="github"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>GitHub URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://github.com/..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="twitter"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Twitter/X URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://twitter.com/..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
                <div className="flex justify-end pt-4">
                 <Button type="submit">
                   <Save className="mr-2 h-4 w-4" />

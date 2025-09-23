@@ -29,7 +29,7 @@ export interface Project {
 }
 
 export interface Experience {
-  id: string;
+  id:string;
   role: string;
   company: string;
   duration: string;
@@ -44,11 +44,15 @@ export interface Education {
   desc: string;
 }
 
+export interface SocialLink {
+  id: string;
+  platform: 'linkedin' | 'github' | 'twitter';
+  url: string;
+}
+
 export interface Contact {
   email: string;
-  linkedin: string;
-  github: string;
-  twitter: string;
+  socials: SocialLink[];
 }
 
 export interface PortfolioData {

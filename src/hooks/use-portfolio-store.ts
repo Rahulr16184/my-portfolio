@@ -20,6 +20,24 @@ interface PortfolioState {
   updateContact: (contact: Contact) => void;
 }
 
+// Helper to migrate old contact structure
+const migrateContactData = (data: any): PortfolioData => {
+  if (data.contact && !data.contact.socials) {
+    const oldContact = data.contact as { email: string; linkedin?: string; github?: string; twitter?: string; };
+    const newContact: Contact = {
+      email: oldContact.email,
+      socials: [],
+    };
+    if (oldContact.linkedin) newContact.socials.push({ id: `social-${Date.now()}-li`, platform: 'linkedin', url: oldContact.linkedin });
+    if (oldContact.github) newContact.socials.push({ id: `social-${Date.now()}-gh`, platform: 'github', url: oldContact.github });
+    if (oldContact.twitter) newContact.socials.push({ id: `social-${Date.now()}-tw`, platform: 'twitter', url: oldContact.twitter });
+    
+    return { ...data, contact: newContact };
+  }
+  return data as PortfolioData;
+}
+
+
 const writeToDb = (data: PortfolioData) => {
     // Save to local storage immediately
     try {
@@ -45,17 +63,21 @@ export const usePortfolioStore = create<PortfolioState>()(
         try {
             const remoteData = await getPortfolioData();
             if (remoteData) {
-                set({ portfolio: remoteData, isLoading: false });
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(remoteData));
+                const migratedData = migrateContactData(remoteData);
+                set({ portfolio: migratedData, isLoading: false });
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(migratedData));
             } else {
                 // Try loading from local storage if firebase is empty
                 const localData = localStorage.getItem(LOCAL_STORAGE_KEY);
                 if (localData) {
-                    set({ portfolio: JSON.parse(localData), isLoading: false });
+                   const parsedData = JSON.parse(localData);
+                   const migratedData = migrateContactData(parsedData);
+                   set({ portfolio: migratedData, isLoading: false });
                 } else {
                     // If nothing anywhere, use initial data and save it to firebase
-                    set({ portfolio: initialData, isLoading: false });
-                    await savePortfolioData(initialData);
+                    const migratedData = migrateContactData(initialData);
+                    set({ portfolio: migratedData, isLoading: false });
+                    await savePortfolioData(migratedData);
                 }
             }
         } catch (error) {
@@ -63,9 +85,12 @@ export const usePortfolioStore = create<PortfolioState>()(
             try {
                 const localData = localStorage.getItem(LOCAL_STORAGE_KEY);
                 if (localData) {
-                    set({ portfolio: JSON.parse(localData), isLoading: false });
+                    const parsedData = JSON.parse(localData);
+                    const migratedData = migrateContactData(parsedData);
+                    set({ portfolio: migratedData, isLoading: false });
                 } else {
-                    set({ portfolio: initialData, isLoading: false });
+                    const migratedData = migrateContactData(initialData);
+                    set({ portfolio: migratedData, isLoading: false });
                 }
             } catch (localError) {
                 console.error("Failed to load from local storage", localError);
