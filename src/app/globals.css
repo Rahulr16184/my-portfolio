@@ -64,11 +64,11 @@
 }
 
 @layer utilities {
-  .fade-in {
-    animation: fade-in 0.75s ease-in-out both;
+  .fade-in-up {
+    animation: fade-in-up 0.8s ease-in-out both;
   }
 
-  @keyframes fade-in {
+  @keyframes fade-in-up {
     from {
       opacity: 0;
       transform: translateY(20px);

@@ -9,12 +9,12 @@ interface SkillsSectionProps {
 
 export default function SkillsSection({ data }: SkillsSectionProps) {
     return (
-        <section id="skills">
+        <section id="skills" className="fade-in-up" style={{ animationDelay: '0.3s' }}>
             <h2 className="text-3xl font-bold font-headline mb-12 text-center">Skills</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {Object.entries(data).map(([category, skills]) => (
+                {Object.entries(data).map(([category, skills], categoryIndex) => (
                     skills.length > 0 && (
-                        <Card key={category} className="bg-card/80 backdrop-blur-sm">
+                        <Card key={category} className="bg-card/80 backdrop-blur-sm fade-in-up" style={{ animationDelay: `${0.4 + categoryIndex * 0.1}s` }}>
                             <CardHeader>
                                 <CardTitle className="text-xl font-bold capitalize text-center">{category}</CardTitle>
                             </CardHeader>
