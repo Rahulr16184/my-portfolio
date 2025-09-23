@@ -20,13 +20,9 @@ const navItems = [
 export default function PublicNav() {
   const pathname = usePathname();
 
-  // In a single-page portfolio, we can use a hash to track active state, but it requires more complex logic.
-  // For now, we'll just style the links for hover/focus states.
-  // A more advanced implementation could use IntersectionObserver to highlight the active link.
-
   return (
     <ScrollArea className="w-full whitespace-nowrap">
-        <nav className="flex w-max space-x-4 px-4">
+        <nav className="flex w-full justify-between items-center">
             {navItems.map((item) => (
                 <Link
                     key={item.href}
@@ -34,7 +30,6 @@ export default function PublicNav() {
                     className={cn(
                         "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                         "text-muted-foreground hover:bg-muted"
-                        // Add active link styling logic here if needed
                     )}
                 >
                     <item.icon className="h-4 w-4" />

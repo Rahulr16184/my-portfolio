@@ -22,7 +22,7 @@ const AdminNav = () => {
     const pathname = usePathname();
     return (
         <ScrollArea className="w-full whitespace-nowrap">
-            <nav className="flex w-max space-x-4 px-4">
+            <nav className="flex w-full justify-between items-center">
                 {menuItems.map((item) => (
                     <Link
                         key={item.href}
