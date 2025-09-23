@@ -91,7 +91,7 @@ export default function ProfilePage() {
                   <FormItem className="flex flex-col items-center text-center">
                     <FormLabel>Profile Photo</FormLabel>
                     <FormControl>
-                      <>
+                      <div>
                         <Image
                           src={field.value || "https://picsum.photos/seed/1/300/300"}
                           alt="Profile Photo"
@@ -108,7 +108,7 @@ export default function ProfilePage() {
                           accept="image/*"
                           disabled={isUploading}
                         />
-                      </>
+                      </div>
                     </FormControl>
                     {isUploading ? (
                         <div className="flex items-center text-muted-foreground">
