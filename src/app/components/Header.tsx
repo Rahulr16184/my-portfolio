@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import {
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Key, LogOut, Eye, EyeOff, User, Info, Laptop, Briefcase, GraduationCap, Mail, Home } from 'lucide-react';
+import { Key, LogOut, Eye, EyeOff, User, Info, Laptop, Briefcase, GraduationCap, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { adminCredentials } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
@@ -29,7 +29,6 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 
 const menuItems = [
-  { href: '/admin', label: 'Dashboard', icon: Home },
   { href: '/admin/profile', label: 'Profile', icon: User },
   { href: '/admin/about', label: 'About Me', icon: Info },
   { href: '/admin/skills', label: 'Skills', icon: Laptop },
@@ -89,7 +88,7 @@ const Header = () => {
   const handleSecretCodeSubmit = () => {
     if (secretCode === adminCredentials.secretCode) {
       setIsDialogOpen(false);
-      router.push('/admin/login');
+      router.push('/admin');
     } else {
       toast({
         variant: 'destructive',
@@ -110,7 +109,7 @@ const Header = () => {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300 bg-header-background/80 backdrop-blur-sm",
+          "fixed top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300 bg-background/80 backdrop-blur-sm",
         )}
       >
         <div className={cn(
@@ -204,5 +203,3 @@ const Header = () => {
 };
 
 export default Header;
-
-    
