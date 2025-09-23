@@ -115,7 +115,7 @@ const Header = () => {
               </>
             ) : <PublicNav />}
           </div>
-          <h1 className="flex-1 text-center font-poppins font-bold text-xl uppercase text-primary">
+          <h1 className="text-center font-poppins font-bold text-xl uppercase text-primary">
             <Link href="/">MY PORTFOLIO</Link>
           </h1>
           <nav className="flex flex-1 items-center justify-end gap-2">
