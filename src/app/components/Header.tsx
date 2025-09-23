@@ -20,7 +20,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Key, LogOut, Eye, EyeOff, User, Info, Laptop, Briefcase, GraduationCap, Mail, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { getAdminCredentials } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeSwitcher } from '@/app/components/ThemeSwitcher';
 import { usePreview } from '@/hooks/use-preview';
@@ -35,6 +34,8 @@ const menuItems = [
   { href: '/admin/education', label: 'Education', icon: GraduationCap },
   { href: '/admin/contact', label: 'Contact', icon: Mail },
 ];
+
+const SECRET_CODE = "123";
 
 const AdminNav = () => {
     const pathname = usePathname();
@@ -84,8 +85,7 @@ const Header = () => {
 
   const handleSecretCodeSubmit = async () => {
     setIsSubmitting(true);
-    const credentials = await getAdminCredentials();
-    if (credentials && secretCode === credentials.secretCode) {
+    if (secretCode === SECRET_CODE) {
       setIsDialogOpen(false);
       router.push('/admin/login');
     } else {
@@ -186,7 +186,7 @@ const Header = () => {
           <DialogHeader>
             <DialogTitle>Enter Secret Code</DialogTitle>
             <DialogDescription>
-              To access the admin login page, please enter the secret code provided by the administrator.
+              To access the admin login page, please enter the secret code.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

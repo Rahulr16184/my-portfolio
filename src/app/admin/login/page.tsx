@@ -18,13 +18,15 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
-import { getAdminCredentials } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
   password: z.string().min(1, { message: "Password is required." }),
 });
+
+const ADMIN_EMAIL = "admin@gmail.com";
+const ADMIN_PASSWORD = "ra4231";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,9 +44,8 @@ export default function AdminLoginPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    const credentials = await getAdminCredentials();
-
-    if (credentials && values.email === credentials.email && values.password === credentials.password) {
+    
+    if (values.email === ADMIN_EMAIL && values.password === ADMIN_PASSWORD) {
       toast({
         title: "Login Successful",
         description: "Redirecting to admin dashboard...",
