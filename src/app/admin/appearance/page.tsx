@@ -49,13 +49,16 @@ export default function AppearancePage() {
   
   // Revert preview if user navigates away without saving
   React.useEffect(() => {
+    const originalAccent = portfolio.theme.accent;
     return () => {
-      setPortfolio({
-        ...portfolio,
-        theme: { accent: originalHsl },
-      });
+        const currentPortfolio = usePortfolioStore.getState().portfolio;
+        setPortfolio({
+            ...currentPortfolio,
+            theme: { accent: originalAccent },
+        });
     }
-  }, [originalHsl, setPortfolio, portfolio]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AdminLayout>
