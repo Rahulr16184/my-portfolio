@@ -22,6 +22,10 @@ const colorSwatches: { name: string, hsl: string }[] = [
   { name: 'Ruby', hsl: '350 85% 60%' },
   { name: 'Sapphire', hsl: '215 85% 60%' },
   { name: 'Lime', hsl: '90 80% 50%' },
+  { name: 'Teal', hsl: '180 70% 45%' },
+  { name: 'Orange', hsl: '30 95% 60%' },
+  { name: 'Lavender', hsl: '250 80% 80%' },
+  { name: 'Mint', hsl: '160 60% 65%' },
 ];
 
 const backgroundGradients: { name: string, light: string, dark: string }[] = [
@@ -30,6 +34,9 @@ const backgroundGradients: { name: string, light: string, dark: string }[] = [
   { name: 'Sunrise', light: 'linear-gradient(to bottom right, #ffecd2, #fcb69f)', dark: 'linear-gradient(to bottom right, #20002c, #cbb4d4)' },
   { name: 'Ocean', light: 'linear-gradient(to bottom right, #a8c0ff, #3f2b96)', dark: 'linear-gradient(to bottom right, #0f2027, #203a43, #2c5364)' },
   { name: 'Rose', light: 'linear-gradient(to bottom right, #ffc3a0, #ffafbd)', dark: 'linear-gradient(to bottom right, #41295a, #2F0743)' },
+  { name: 'Cosmic', light: 'linear-gradient(to bottom right, #d4fc79, #96e6a1)', dark: 'linear-gradient(to bottom right, #000000, #434343)' },
+  { name: 'Minty', light: 'linear-gradient(to bottom right, #E0EFC6, #A7D3A6)', dark: 'linear-gradient(to bottom right, #1E3A3A, #0F1F1F)' },
+  { name: 'Crimson', light: 'linear-gradient(to bottom right, #F5F7FA, #B8C6DB)', dark: 'linear-gradient(to bottom right, #33080a, #6e1014)' },
 ];
 
 
