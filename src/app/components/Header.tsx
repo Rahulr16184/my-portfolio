@@ -70,6 +70,7 @@ const AdminNav = () => {
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const [isMounted, setIsMounted] = React.useState(false);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [isLogoutAlertOpen, setIsLogoutAlertOpen] = React.useState(false);
   const [secretCode, setSecretCode] = React.useState('');
@@ -81,12 +82,19 @@ const Header = () => {
   const isAdminPage = pathname.startsWith('/admin');
 
   React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (!isMounted) return;
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isMounted]);
   
   // Reset preview when leaving admin pages
   React.useEffect(() => {
@@ -120,7 +128,7 @@ const Header = () => {
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300 border-b",
-          isScrolled ? "bg-header-background/80 backdrop-blur-sm" : "bg-header-background"
+          isMounted && isScrolled ? "bg-header-background/80 backdrop-blur-sm" : "bg-header-background"
         )}
       >
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
