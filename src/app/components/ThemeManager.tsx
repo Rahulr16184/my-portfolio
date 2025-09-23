@@ -18,17 +18,7 @@ export function ThemeManager() {
 
       // For dark theme (slightly desaturated and brighter)
       const darkHsl = `${h} ${parseInt(s, 10) - 10}% ${parseInt(l, 10) + 10}%`;
-      const darkAccentRule = `.dark { --accent: ${darkHsl}; --ring: ${darkHsl}; }`;
-      
-      // Create or update a style tag to handle dark mode override
-      const styleTagId = 'dynamic-theme-style';
-      let styleTag = document.getElementById(styleTagId) as HTMLStyleElement;
-      if (!styleTag) {
-        styleTag = document.createElement('style');
-        styleTag.id = styleTagId;
-        document.head.appendChild(styleTag);
-      }
-      styleTag.innerHTML = darkAccentRule;
+      root.style.setProperty('--accent-dark', darkHsl);
 
     }
   }, [accentHsl]);

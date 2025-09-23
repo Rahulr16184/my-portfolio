@@ -16,13 +16,14 @@
     --secondary-foreground: 210 40% 9.8%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 210 40% 45%;
-    --accent: 16 93% 63%; /* Soft Coral */
+    --accent: 16 93% 63%; /* Default Light Accent */
+    --accent-dark: 16 83% 73%; /* Default Dark Accent */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 210 40% 90%;
     --input: 210 40% 90%;
-    --ring: 16 93% 63%;
+    --ring: 16 93% 63%; /* Default Ring */
     --header-background: 0 0% 100%;
   }
  
@@ -39,13 +40,13 @@
     --secondary-foreground: 210 20% 98%;
     --muted: 210 30% 18%;
     --muted-foreground: 210 20% 65%;
-    --accent: 16 85% 55%; /* Soft Coral */
+    --accent: var(--accent-dark); /* Use the dynamic dark accent */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 210 30% 25%;
     --input: 210 30% 25%;
-    --ring: 16 85% 55%;
+    --ring: var(--accent-dark); /* Use the dynamic dark accent for ring */
     --header-background: 210 30% 9.8%;
   }
 }
