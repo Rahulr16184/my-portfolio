@@ -127,11 +127,15 @@ const Header = () => {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300 border-b",
-          isMounted && isScrolled ? "bg-header-background/80 backdrop-blur-sm" : "bg-header-background"
+          "fixed top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300",
+          isMounted && isScrolled ? "bg-header-background/80 backdrop-blur-sm" : "bg-header-background",
+          isAdminPage ? 'border-b' : ''
         )}
       >
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+        <div className={cn(
+          "container mx-auto flex h-16 items-center justify-between px-4 md:px-6",
+          !isAdminPage && "border-b"
+        )}>
           <div className="flex-1 flex items-center justify-start gap-2">
             {isAdminPage && (
               <>
