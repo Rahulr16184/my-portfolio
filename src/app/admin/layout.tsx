@@ -5,16 +5,6 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarProvider,
-  SidebarInset,
-} from '@/components/ui/sidebar';
-import {
   User,
   Info,
   Laptop,
@@ -24,7 +14,7 @@ import {
   Home,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 const menuItems = [
   { href: '/admin', label: 'Dashboard', icon: Home },
@@ -37,44 +27,47 @@ const menuItems = [
   { href: '/admin/contact', label: 'Contact', icon: Mail },
 ];
 
+const AdminNav = () => {
+    const pathname = usePathname();
+    return (
+        <div className="relative border-b">
+            <ScrollArea className="max-w-full whitespace-nowrap">
+                <nav className="flex items-center gap-4 p-4">
+                    {menuItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={cn(
+                                "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                                pathname === item.href
+                                ? "bg-primary text-primary-foreground"
+                                : "text-muted-foreground hover:bg-muted"
+                            )}
+                        >
+                            <item.icon className="h-4 w-4" />
+                            <span>{item.label}</span>
+                        </Link>
+                    ))}
+                </nav>
+                <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+        </div>
+    );
+};
+
+
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
 
   return (
-    <SidebarProvider>
-      <Sidebar>
-        <SidebarHeader>
-          {/* Optional: Add a header or logo here */}
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            {menuItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                 <Link href={item.href} passHref>
-                    <SidebarMenuButton
-                      isActive={pathname === item.href}
-                      tooltip={{
-                        children: item.label,
-                      }}
-                    >
-                      <item.icon />
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </Link>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarContent>
-      </Sidebar>
-      <SidebarInset>
+    <div className="pt-16">
+        <AdminNav />
         <div className="p-4 md:p-6 lg:p-8 h-full">
             {children}
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+    </div>
   );
 }
