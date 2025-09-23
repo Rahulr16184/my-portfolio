@@ -27,8 +27,6 @@ export default function PublicNav() {
     setIsOpen(false);
   };
 
-  if (pathname.startsWith('/admin')) return null;
-
   return (
     <>
       {/* Desktop Navigation */}
