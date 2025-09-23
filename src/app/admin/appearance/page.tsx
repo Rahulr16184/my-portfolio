@@ -29,10 +29,8 @@ export default function AppearancePage() {
   const [selectedHsl, setSelectedHsl] = React.useState(portfolio.theme.accent);
   const originalHsl = portfolio.theme.accent;
 
-  // Temporarily update the theme for live preview
   const handleColorSelect = (hsl: string) => {
     setSelectedHsl(hsl);
-    // Use the main setPortfolio to update the store without triggering a DB write
     setPortfolio({
       ...portfolio,
       theme: { accent: hsl },
@@ -46,19 +44,6 @@ export default function AppearancePage() {
       description: 'Your new accent color has been applied.',
     });
   };
-  
-  // Revert preview if user navigates away without saving
-  React.useEffect(() => {
-    const originalAccent = portfolio.theme.accent;
-    return () => {
-        const currentPortfolio = usePortfolioStore.getState().portfolio;
-        setPortfolio({
-            ...currentPortfolio,
-            theme: { accent: originalAccent },
-        });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <AdminLayout>
