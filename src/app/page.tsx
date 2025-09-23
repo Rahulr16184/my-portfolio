@@ -1,51 +1,39 @@
 import { portfolioData } from "@/lib/portfolio-data";
-import { PortfolioSection } from "@/lib/types";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { PortfolioData } from "@/lib/types";
 
 interface PublicPortfolioPageProps {
-  sections?: PortfolioSection[];
+  data?: PortfolioData;
 }
 
-const SectionComponent = ({ section }: { section: PortfolioSection }) => {
-  // In the future, we will replace this with specific components
-  // for each section type (e.g., Hero, About, Projects).
-  return (
-    <Card className="w-full my-8 animate-fade-in">
-      <CardHeader>
-        <CardTitle className="capitalize">{section.name || section.type}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p>This is a placeholder for the '{section.type}' section.</p>
-        <pre className="mt-4 p-4 bg-muted rounded-md overflow-x-auto text-sm">
-          {JSON.stringify(section.content, null, 2)}
-        </pre>
-      </CardContent>
-    </Card>
-  );
-};
-
-
-export default function PublicPortfolioPage({ sections: sectionsProp }: PublicPortfolioPageProps) {
-  const sections = sectionsProp || portfolioData;
-
-  if (sections.length === 0) {
-    return (
-       <div className="container mx-auto min-h-screen flex items-center justify-center text-center">
-        <div>
-          <h1 className="text-6xl font-headline font-bold">Your Portfolio is Empty</h1>
-          <p className="mt-4 text-xl text-muted-foreground">Add sections in the admin panel to build your page.</p>
-        </div>
-      </div>
-    );
-  }
+export default function PublicPortfolioPage({ data: dataProp }: PublicPortfolioPageProps) {
+  const data = dataProp || portfolioData;
 
   return (
     <div className="container mx-auto py-24 px-4 md:px-6">
-      {sections.map((section, index) => (
-        <div key={section.id} style={{ animationDelay: `${index * 150}ms` }} className="fade-in">
-          <SectionComponent section={section} />
-        </div>
-      ))}
+      <div className="space-y-12">
+        {/* Profile/Hero Section */}
+        <section className="text-center">
+          <h1 className="text-5xl font-bold font-headline">{data.profile.name}</h1>
+          <p className="mt-2 text-xl text-muted-foreground">{data.profile.role}</p>
+          <p className="mt-4 max-w-2xl mx-auto">{data.profile.tagline}</p>
+        </section>
+
+        {/* About Section */}
+        <section>
+          <h2 className="text-3xl font-bold font-headline mb-4">About Me</h2>
+          <p className="whitespace-pre-line">{data.about.bio}</p>
+          <ul className="mt-4 list-disc list-inside space-y-1">
+            {data.about.highlights.map((highlight, index) => (
+              <li key={index}>{highlight}</li>
+            ))}
+          </ul>
+        </section>
+
+        {/* You can continue to add more sections here based on the new data structure */}
+      </div>
+       <pre className="mt-12 p-4 bg-muted rounded-md overflow-x-auto text-sm">
+          {JSON.stringify(data, null, 2)}
+        </pre>
     </div>
   );
 }
