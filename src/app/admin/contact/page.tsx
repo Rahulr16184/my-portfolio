@@ -35,6 +35,7 @@ const socialLinkSchema = z.object({
 
 const contactSchema = z.object({
   email: z.string().email("Invalid email address"),
+  phone: z.string().optional(),
   socials: z.array(socialLinkSchema),
 });
 
@@ -85,6 +86,20 @@ export default function ContactPage() {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input placeholder="your.email@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number (Optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="+1 123 456 7890" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

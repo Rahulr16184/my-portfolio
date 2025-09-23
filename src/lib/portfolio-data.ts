@@ -53,6 +53,7 @@ export const portfolioData: PortfolioData = {
   ],
   contact: {
     email: "john.doe@example.com",
+    phone: "+1 123 456 7890",
     socials: [
       { id: 'social-1', platform: 'linkedin', url: 'https://www.linkedin.com' },
       { id: 'social-2', platform: 'github', url: 'https://www.github.com' },
