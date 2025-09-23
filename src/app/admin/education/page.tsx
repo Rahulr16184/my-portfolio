@@ -59,8 +59,6 @@ export default function EducationPage() {
   
   const removeEducation = (index: number) => {
     remove(index);
-    // This is tricky because react-hook-form's remove is async
-    // We get the form values, splice the array, and then update
     const currentValues = form.getValues().education;
     currentValues.splice(index, 1);
     updateEducation(currentValues);

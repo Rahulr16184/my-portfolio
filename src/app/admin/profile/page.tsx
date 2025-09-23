@@ -20,7 +20,7 @@ import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 import AdminLayout from "../layout";
 import Image from "next/image";
-import { uploadToCloudinary } from "@/lib/firebase";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 

@@ -20,9 +20,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2, Loader2, Upload } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-import { uploadToCloudinary } from "@/lib/firebase";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import { useState } from "react";
 
 const projectSchema = z.object({

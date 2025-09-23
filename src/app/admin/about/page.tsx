@@ -40,13 +40,11 @@ export default function AboutPage() {
 
   const addHighlight = () => {
     append("");
-    // Trigger instant update
     updateAbout(form.getValues());
   }
 
   const removeHighlight = (index: number) => {
     remove(index);
-     // Trigger instant update
      updateAbout(form.getValues());
   }
 
