@@ -41,28 +41,26 @@ const SECRET_CODE = "123";
 const AdminNav = () => {
     const pathname = usePathname();
     return (
-        <div className="relative">
-            <ScrollArea className="max-w-full whitespace-nowrap">
-                <nav className="flex items-center gap-4 px-4">
-                    {menuItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                                pathname === item.href
-                                ? "bg-primary text-primary-foreground"
-                                : "text-muted-foreground hover:bg-muted"
-                            )}
-                        >
-                            <item.icon className="h-4 w-4" />
-                            <span>{item.label}</span>
-                        </Link>
-                    ))}
-                </nav>
-                <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-        </div>
+        <ScrollArea className="w-full whitespace-nowrap">
+            <nav className="flex w-max space-x-4 px-4">
+                {menuItems.map((item) => (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                            "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                            pathname === item.href
+                            ? "bg-primary text-primary-foreground"
+                            : "text-muted-foreground hover:bg-muted"
+                        )}
+                    >
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.label}</span>
+                    </Link>
+                ))}
+            </nav>
+            <ScrollBar orientation="horizontal" className="mt-2" />
+        </ScrollArea>
     );
 };
 
@@ -164,7 +162,7 @@ const Header = () => {
           </nav>
         </div>
         {isAdminPage && !isLoginPage && !isPreview && (
-          <div className="container mx-auto border-b h-[49px] flex items-center">
+          <div className="container mx-auto border-b h-[49px] flex items-center overflow-x-hidden">
             <AdminNav />
           </div>
         )}
