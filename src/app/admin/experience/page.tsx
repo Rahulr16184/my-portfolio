@@ -18,9 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
-import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 
 const experienceSchema = z.object({
   id: z.string(),
@@ -35,43 +33,41 @@ const experiencesSchema = z.object({
 });
 
 export default function ExperiencePage() {
-  const { toast } = useToast();
   const { portfolio, updateExperience } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof experiencesSchema>>({
     resolver: zodResolver(experiencesSchema),
-    defaultValues: { experience: portfolio.experience },
+    values: { experience: portfolio.experience },
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "experience",
   });
-
-  const onSubmit = (values: z.infer<typeof experiencesSchema>) => {
-    updateExperience(values.experience);
-    toast({
-      title: "Experience Updated",
-      description: "Your work experience has been saved.",
-    });
-  };
   
   const addExperience = () => {
-    append({
+    const newEntry = {
       id: `exp-${Date.now()}`,
       role: "",
       company: "",
       duration: "",
       desc: "",
-    });
+    };
+    append(newEntry);
+    updateExperience([...portfolio.experience, newEntry]);
   };
 
-  form.reset({ experience: portfolio.experience });
+  const removeExperience = (index: number) => {
+    remove(index);
+    const currentValues = form.getValues().experience;
+    currentValues.splice(index, 1);
+    updateExperience(currentValues);
+  }
 
   return (
     <AdminLayout>
        <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onChange={() => updateExperience(form.getValues().experience)} className="space-y-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Manage Experience</h1>
             <Button type="button" onClick={addExperience}>
@@ -85,7 +81,7 @@ export default function ExperiencePage() {
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Experience #{index + 1}</CardTitle>
-                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                    <Button type="button" variant="ghost" size="icon" onClick={() => removeExperience(index)}>
                       <Trash2 className="text-destructive" />
                     </Button>
                   </div>
@@ -138,12 +134,6 @@ export default function ExperiencePage() {
                 </CardContent>
               </Card>
             ))}
-          </div>
-          
-          <Separator />
-          
-          <div className="flex justify-end">
-            <Button type="submit">Save All Experience</Button>
           </div>
         </form>
       </Form>

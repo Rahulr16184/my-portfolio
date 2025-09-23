@@ -19,6 +19,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 import AdminLayout from "../layout";
+import Image from "next/image";
+import { uploadToCloudinary } from "@/lib/firebase";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -31,23 +35,41 @@ const profileSchema = z.object({
 export default function ProfilePage() {
   const { toast } = useToast();
   const { portfolio, updateProfile } = usePortfolioStore();
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
-    defaultValues: portfolio.profile,
+    values: portfolio.profile,
   });
 
-  const onSubmit = (values: z.infer<typeof profileSchema>) => {
-    updateProfile(values);
-    toast({
-      title: "Profile Updated",
-      description: "Your profile information has been saved.",
-    });
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setIsUploading(true);
+      try {
+        const imageUrl = await uploadToCloudinary(file);
+        if (imageUrl) {
+          form.setValue("profilePhoto", imageUrl);
+          updateProfile(form.getValues());
+          toast({
+            title: "Image Uploaded",
+            description: "Your new profile photo has been saved.",
+          });
+        } else {
+          throw new Error("Upload returned null");
+        }
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Upload Failed",
+          description: "Could not upload the image. Please try again.",
+        });
+      } finally {
+        setIsUploading(false);
+      }
+    }
   };
-  
-  // Watch for external state changes and reset the form
-  const { name, role, tagline, resumeUrl, profilePhoto } = portfolio.profile;
-  form.reset({ name, role, tagline, resumeUrl, profilePhoto });
 
   return (
     <AdminLayout>
@@ -57,7 +79,49 @@ export default function ProfilePage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form
+              onChange={() => updateProfile(form.getValues())}
+              className="space-y-6"
+            >
+               <FormField
+                control={form.control}
+                name="profilePhoto"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-center text-center">
+                    <FormLabel>Profile Photo</FormLabel>
+                    <FormControl>
+                      <>
+                        <Image
+                          src={field.value || "https://picsum.photos/seed/1/300/300"}
+                          alt="Profile Photo"
+                          width={128}
+                          height={128}
+                          className="rounded-full object-cover w-32 h-32 border-4 border-muted cursor-pointer"
+                          onClick={() => fileInputRef.current?.click()}
+                        />
+                         <input
+                          type="file"
+                          ref={fileInputRef}
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          accept="image/*"
+                          disabled={isUploading}
+                        />
+                      </>
+                    </FormControl>
+                    {isUploading ? (
+                        <div className="flex items-center text-muted-foreground">
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <span>Uploading...</span>
+                        </div>
+                    ) : (
+                        <p className="text-sm text-muted-foreground pt-1">Click image to upload a new one</p>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="name"
@@ -112,12 +176,6 @@ export default function ProfilePage() {
                   </FormItem>
                 )}
               />
-
-              {/* TODO: Add image upload for profile photo */}
-
-              <div className="flex justify-end">
-                <Button type="submit">Save Changes</Button>
-              </div>
             </form>
           </Form>
         </CardContent>

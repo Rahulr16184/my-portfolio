@@ -5,7 +5,6 @@ import AdminLayout from "../layout";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -17,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
-import { useToast } from "@/hooks/use-toast";
 
 const contactSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -27,23 +25,12 @@ const contactSchema = z.object({
 });
 
 export default function ContactPage() {
-  const { toast } = useToast();
   const { portfolio, updateContact } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
-    defaultValues: portfolio.contact,
+    values: portfolio.contact,
   });
-
-  const onSubmit = (values: z.infer<typeof contactSchema>) => {
-    updateContact(values);
-    toast({
-      title: "Contact Info Updated",
-      description: "Your contact details have been saved.",
-    });
-  };
-
-  form.reset(portfolio.contact);
 
   return (
     <AdminLayout>
@@ -53,7 +40,7 @@ export default function ContactPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onChange={() => updateContact(form.getValues())} className="space-y-6">
               <FormField
                 control={form.control}
                 name="email"
@@ -108,10 +95,6 @@ export default function ContactPage() {
                   </FormItem>
                 )}
               />
-
-              <div className="flex justify-end">
-                <Button type="submit">Save Changes</Button>
-              </div>
             </form>
           </Form>
         </CardContent>

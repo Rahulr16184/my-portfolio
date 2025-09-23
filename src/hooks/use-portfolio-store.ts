@@ -1,11 +1,13 @@
 
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import { portfolioData as initialData } from '@/lib/portfolio-data';
 import { PortfolioData, Profile, About, Skills, Project, Experience, Education, Contact } from '@/lib/types';
+import { getPortfolioData, savePortfolioData } from '@/lib/firebase';
 
 interface PortfolioState {
   portfolio: PortfolioData;
+  isLoading: boolean;
+  initializePortfolio: () => Promise<void>;
   setPortfolio: (data: PortfolioData) => void;
   updateProfile: (profile: Profile) => void;
   updateAbout: (about: About) => void;
@@ -16,43 +18,70 @@ interface PortfolioState {
   updateContact: (contact: Contact) => void;
 }
 
+const writeToDb = (data: PortfolioData) => {
+    // Debounce saving to Firebase
+    clearTimeout((window as any).__saveTimeout);
+    (window as any).__saveTimeout = setTimeout(() => {
+        savePortfolioData(data);
+    }, 1000);
+}
+
 export const usePortfolioStore = create<PortfolioState>()(
-  persist(
-    (set) => ({
+    (set, get) => ({
       portfolio: initialData,
+      isLoading: true,
+      initializePortfolio: async () => {
+        const remoteData = await getPortfolioData();
+        if (remoteData) {
+            set({ portfolio: remoteData, isLoading: false });
+        } else {
+            set({ isLoading: false });
+             // Optionally save initial data to firebase if it doesn't exist
+            savePortfolioData(initialData);
+        }
+      },
       setPortfolio: (data) => set({ portfolio: data }),
       updateProfile: (profile) =>
-        set((state) => ({
-          portfolio: { ...state.portfolio, profile },
-        })),
+        set((state) => {
+          const newState = { portfolio: { ...state.portfolio, profile } };
+          writeToDb(newState.portfolio);
+          return newState;
+        }),
       updateAbout: (about) =>
-        set((state) => ({
-          portfolio: { ...state.portfolio, about },
-        })),
+        set((state) => {
+           const newState = { portfolio: { ...state.portfolio, about } };
+           writeToDb(newState.portfolio);
+           return newState;
+        }),
       updateSkills: (skills) =>
-        set((state) => ({
-          portfolio: { ...state.portfolio, skills },
-        })),
+        set((state) => {
+           const newState = { portfolio: { ...state.portfolio, skills } };
+           writeToDb(newState.portfolio);
+           return newState;
+        }),
       updateProjects: (projects) =>
-        set((state) => ({
-          portfolio: { ...state.portfolio, projects },
-        })),
+        set((state) => {
+           const newState = { portfolio: { ...state.portfolio, projects } };
+           writeToDb(newState.portfolio);
+           return newState;
+        }),
       updateExperience: (experience) =>
-        set((state) => ({
-          portfolio: { ...state.portfolio, experience },
-        })),
+        set((state) => {
+           const newState = { portfolio: { ...state.portfolio, experience } };
+           writeToDb(newState.portfolio);
+           return newState;
+        }),
       updateEducation: (education) =>
-        set((state) => ({
-          portfolio: { ...state.portfolio, education },
-        })),
+        set((state) => {
+           const newState = { portfolio: { ...state.portfolio, education } };
+           writeToDb(newState.portfolio);
+           return newState;
+        }),
       updateContact: (contact) =>
-        set((state) => ({
-          portfolio: { ...state.portfolio, contact },
-        })),
-    }),
-    {
-      name: 'portfolio-store', 
-      storage: createJSONStorage(() => localStorage), 
-    }
-  )
+        set((state) => {
+           const newState = { portfolio: { ...state.portfolio, contact } };
+           writeToDb(newState.portfolio);
+           return newState;
+        }),
+    })
 );

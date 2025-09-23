@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
-import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2 } from "lucide-react";
 
 const aboutSchema = z.object({
@@ -27,12 +26,11 @@ const aboutSchema = z.object({
 });
 
 export default function AboutPage() {
-  const { toast } = useToast();
   const { portfolio, updateAbout } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof aboutSchema>>({
     resolver: zodResolver(aboutSchema),
-    defaultValues: portfolio.about,
+    values: portfolio.about,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -40,16 +38,18 @@ export default function AboutPage() {
     name: "highlights",
   });
 
-  const onSubmit = (values: z.infer<typeof aboutSchema>) => {
-    updateAbout(values);
-    toast({
-      title: "About Me Updated",
-      description: "Your information has been saved.",
-    });
-  };
+  const addHighlight = () => {
+    append("");
+    // Trigger instant update
+    updateAbout(form.getValues());
+  }
 
-  const { bio, highlights } = portfolio.about;
-  form.reset({ bio, highlights });
+  const removeHighlight = (index: number) => {
+    remove(index);
+     // Trigger instant update
+     updateAbout(form.getValues());
+  }
+
 
   return (
     <AdminLayout>
@@ -59,7 +59,7 @@ export default function AboutPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onChange={() => updateAbout(form.getValues())} className="space-y-6">
               <FormField
                 control={form.control}
                 name="bio"
@@ -99,7 +99,7 @@ export default function AboutPage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        onClick={() => remove(index)}
+                        onClick={() => removeHighlight(index)}
                       >
                         <Trash2 className="text-destructive" />
                       </Button>
@@ -109,17 +109,13 @@ export default function AboutPage() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => append("")}
+                    onClick={addHighlight}
                   >
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Add Highlight
                   </Button>
                 </div>
                  <FormMessage>{form.formState.errors.highlights?.message}</FormMessage>
-              </div>
-
-              <div className="flex justify-end">
-                <Button type="submit">Save Changes</Button>
               </div>
             </form>
           </Form>

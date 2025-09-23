@@ -19,8 +19,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, Loader2, Upload } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
+import { uploadToCloudinary } from "@/lib/firebase";
+import { useState } from "react";
 
 const projectSchema = z.object({
   id: z.string(),
@@ -39,43 +42,67 @@ const projectsSchema = z.object({
 export default function ProjectsPage() {
   const { toast } = useToast();
   const { portfolio, updateProjects } = usePortfolioStore();
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
 
   const form = useForm<z.infer<typeof projectsSchema>>({
     resolver: zodResolver(projectsSchema),
-    defaultValues: { projects: portfolio.projects },
+    values: { projects: portfolio.projects },
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "projects",
   });
-
-  const onSubmit = (values: z.infer<typeof projectsSchema>) => {
-    updateProjects(values.projects);
-    toast({
-      title: "Projects Updated",
-      description: "Your project information has been saved.",
-    });
-  };
   
   const addProject = () => {
-    append({
+    const newProject = {
       id: `proj-${Date.now()}`,
-      title: "",
-      desc: "",
+      title: "New Project",
+      desc: "A brief description of your awesome project.",
       imageUrl: "https://picsum.photos/seed/new/600/400",
-      tech: [],
+      tech: ["Next.js"],
       github: "",
       demo: "",
-    });
+    };
+    append(newProject);
+    updateProjects([...portfolio.projects, newProject]);
   };
 
-  form.reset({ projects: portfolio.projects });
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadingIndex(index);
+      try {
+        const imageUrl = await uploadToCloudinary(file);
+        if (imageUrl) {
+          const updatedProjects = [...form.getValues().projects];
+          updatedProjects[index].imageUrl = imageUrl;
+          updateProjects(updatedProjects);
+          toast({
+            title: "Image Uploaded",
+            description: "The project image has been saved.",
+          });
+        } else {
+          throw new Error("Upload returned null");
+        }
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Upload Failed",
+          description: "Could not upload the image. Please try again.",
+        });
+      } finally {
+        setUploadingIndex(null);
+      }
+    }
+  };
+
+  const fileInputRefs = portfolio.projects.map(() => React.createRef<HTMLInputElement>());
 
   return (
     <AdminLayout>
        <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onChange={() => updateProjects(form.getValues().projects)} className="space-y-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Manage Projects</h1>
             <Button type="button" onClick={addProject}>
@@ -120,10 +147,28 @@ export default function ProjectsPage() {
                   <FormField
                     control={form.control}
                     name={`projects.${index}.imageUrl`}
-                    render={({ field }) => (
+                    render={({ field: imageField }) => (
                       <FormItem>
-                        <FormLabel>Image URL</FormLabel>
-                        <FormControl><Input {...field} /></FormControl>
+                        <FormLabel>Project Image</FormLabel>
+                        <div className="flex items-center gap-4">
+                          <Image src={imageField.value} alt={`Project ${index+1} Image`} width={120} height={80} className="rounded-md object-cover w-30 h-20 border-2 border-muted" />
+                          <input
+                            type="file"
+                            ref={fileInputRefs[index]}
+                            onChange={(e) => handleImageUpload(e, index)}
+                            className="hidden"
+                            accept="image/*"
+                            disabled={uploadingIndex === index}
+                          />
+                          <Button type="button" variant="outline" size="sm" onClick={() => fileInputRefs[index].current?.click()} disabled={uploadingIndex === index}>
+                            {uploadingIndex === index ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <Upload className="mr-2 h-4 w-4" />
+                            )}
+                            Change Image
+                          </Button>
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -150,7 +195,6 @@ export default function ProjectsPage() {
                       </FormItem>
                     )}
                   />
-                   {/* TODO: Add better UI for managing tech array */}
                   <FormField
                     control={form.control}
                     name={`projects.${index}.tech`}
@@ -161,7 +205,7 @@ export default function ProjectsPage() {
                             <Input 
                                 {...field} 
                                 value={Array.isArray(field.value) ? field.value.join(', ') : ''}
-                                onChange={(e) => field.onChange(e.target.value.split(',').map(s => s.trim()))}
+                                onChange={(e) => field.onChange(e.target.value.split(/,\s*/))}
                             />
                         </FormControl>
                         <FormMessage />
@@ -171,12 +215,6 @@ export default function ProjectsPage() {
                 </CardContent>
               </Card>
             ))}
-          </div>
-          
-          <Separator />
-          
-          <div className="flex justify-end">
-            <Button type="submit">Save All Projects</Button>
           </div>
         </form>
       </Form>

@@ -18,9 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
-import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 
 const educationItemSchema = z.object({
   id: z.string(),
@@ -35,43 +33,43 @@ const educationSchema = z.object({
 });
 
 export default function EducationPage() {
-  const { toast } = useToast();
   const { portfolio, updateEducation } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof educationSchema>>({
     resolver: zodResolver(educationSchema),
-    defaultValues: { education: portfolio.education },
+    values: { education: portfolio.education },
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "education",
   });
-
-  const onSubmit = (values: z.infer<typeof educationSchema>) => {
-    updateEducation(values.education);
-    toast({
-      title: "Education Updated",
-      description: "Your education history has been saved.",
-    });
-  };
   
   const addEducation = () => {
-    append({
+    const newEntry = {
       id: `edu-${Date.now()}`,
       degree: "",
       institution: "",
       duration: "",
       desc: "",
-    });
+    };
+    append(newEntry);
+    updateEducation([...portfolio.education, newEntry]);
   };
-
-  form.reset({ education: portfolio.education });
+  
+  const removeEducation = (index: number) => {
+    remove(index);
+    // This is tricky because react-hook-form's remove is async
+    // We get the form values, splice the array, and then update
+    const currentValues = form.getValues().education;
+    currentValues.splice(index, 1);
+    updateEducation(currentValues);
+  }
 
   return (
     <AdminLayout>
        <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onChange={() => updateEducation(form.getValues().education)} className="space-y-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Manage Education</h1>
             <Button type="button" onClick={addEducation}>
@@ -85,7 +83,7 @@ export default function EducationPage() {
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Education #{index + 1}</CardTitle>
-                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                    <Button type="button" variant="ghost" size="icon" onClick={() => removeEducation(index)}>
                       <Trash2 className="text-destructive" />
                     </Button>
                   </div>
@@ -138,12 +136,6 @@ export default function EducationPage() {
                 </CardContent>
               </Card>
             ))}
-          </div>
-          
-          <Separator />
-          
-          <div className="flex justify-end">
-            <Button type="submit">Save All Education</Button>
           </div>
         </form>
       </Form>
