@@ -1,18 +1,19 @@
+
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { portfolioData as initialData } from '@/lib/portfolio-data';
-import { PortfolioData } from '@/lib/types';
+import { PortfolioData, Profile, About, Skills, Project, Experience, Education, Contact } from '@/lib/types';
 
 interface PortfolioState {
   portfolio: PortfolioData;
   setPortfolio: (data: PortfolioData) => void;
-  updateProfile: (profile: Partial<PortfolioData['profile']>) => void;
-  updateAbout: (about: Partial<PortfolioData['about']>) => void;
-  updateSkills: (skills: Partial<PortfolioData['skills']>) => void;
-  updateProjects: (projects: PortfolioData['projects']) => void;
-  updateExperience: (experience: PortfolioData['experience']) => void;
-  updateEducation: (education: PortfolioData['education']) => void;
-  updateContact: (contact: Partial<PortfolioData['contact']>) => void;
+  updateProfile: (profile: Profile) => void;
+  updateAbout: (about: About) => void;
+  updateSkills: (skills: Skills) => void;
+  updateProjects: (projects: Project[]) => void;
+  updateExperience: (experience: Experience[]) => void;
+  updateEducation: (education: Education[]) => void;
+  updateContact: (contact: Contact) => void;
 }
 
 export const usePortfolioStore = create<PortfolioState>()(
@@ -22,15 +23,15 @@ export const usePortfolioStore = create<PortfolioState>()(
       setPortfolio: (data) => set({ portfolio: data }),
       updateProfile: (profile) =>
         set((state) => ({
-          portfolio: { ...state.portfolio, profile: { ...state.portfolio.profile, ...profile } },
+          portfolio: { ...state.portfolio, profile },
         })),
       updateAbout: (about) =>
         set((state) => ({
-          portfolio: { ...state.portfolio, about: { ...state.portfolio.about, ...about } },
+          portfolio: { ...state.portfolio, about },
         })),
       updateSkills: (skills) =>
         set((state) => ({
-          portfolio: { ...state.portfolio, skills: { ...state.portfolio.skills, ...skills } },
+          portfolio: { ...state.portfolio, skills },
         })),
       updateProjects: (projects) =>
         set((state) => ({
@@ -46,7 +47,7 @@ export const usePortfolioStore = create<PortfolioState>()(
         })),
       updateContact: (contact) =>
         set((state) => ({
-          portfolio: { ...state.portfolio, contact: { ...state.portfolio.contact, ...contact } },
+          portfolio: { ...state.portfolio, contact },
         })),
     }),
     {

@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 import AdminLayout from "../layout";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,8 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { portfolioData as initialData } from "@/lib/portfolio-data";
-import { About } from "@/lib/types";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2 } from "lucide-react";
 
@@ -30,11 +28,11 @@ const aboutSchema = z.object({
 
 export default function AboutPage() {
   const { toast } = useToast();
-  const [portfolioData, setPortfolioData] = useState(initialData);
+  const { portfolio, updateAbout } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof aboutSchema>>({
     resolver: zodResolver(aboutSchema),
-    defaultValues: portfolioData.about,
+    defaultValues: portfolio.about,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -43,17 +41,15 @@ export default function AboutPage() {
   });
 
   const onSubmit = (values: z.infer<typeof aboutSchema>) => {
-    setPortfolioData((prev) => ({
-      ...prev,
-      about: values as About,
-    }));
+    updateAbout(values);
     toast({
       title: "About Me Updated",
       description: "Your information has been saved.",
     });
-    // Here you would typically save the data to a backend/DB
-    console.log("Updated portfolio data:", { ...portfolioData, about: values });
   };
+
+  const { bio, highlights } = portfolio.about;
+  form.reset({ bio, highlights });
 
   return (
     <AdminLayout>

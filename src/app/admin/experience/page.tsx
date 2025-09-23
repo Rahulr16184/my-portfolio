@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 import AdminLayout from "../layout";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,8 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { portfolioData as initialData } from "@/lib/portfolio-data";
-import { Experience } from "@/lib/types";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -38,11 +36,11 @@ const experiencesSchema = z.object({
 
 export default function ExperiencePage() {
   const { toast } = useToast();
-  const [portfolioData, setPortfolioData] = useState(initialData);
+  const { portfolio, updateExperience } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof experiencesSchema>>({
     resolver: zodResolver(experiencesSchema),
-    defaultValues: { experience: portfolioData.experience },
+    defaultValues: { experience: portfolio.experience },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -51,15 +49,11 @@ export default function ExperiencePage() {
   });
 
   const onSubmit = (values: z.infer<typeof experiencesSchema>) => {
-    setPortfolioData((prev) => ({
-      ...prev,
-      experience: values.experience as Experience[],
-    }));
+    updateExperience(values.experience);
     toast({
       title: "Experience Updated",
       description: "Your work experience has been saved.",
     });
-    console.log("Updated portfolio data:", { ...portfolioData, experience: values.experience });
   };
   
   const addExperience = () => {
@@ -70,7 +64,9 @@ export default function ExperiencePage() {
       duration: "",
       desc: "",
     });
-  }
+  };
+
+  form.reset({ experience: portfolio.experience });
 
   return (
     <AdminLayout>

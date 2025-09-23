@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 import AdminLayout from "../layout";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,8 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { portfolioData as initialData } from "@/lib/portfolio-data";
-import { Project } from "@/lib/types";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -40,11 +38,11 @@ const projectsSchema = z.object({
 
 export default function ProjectsPage() {
   const { toast } = useToast();
-  const [portfolioData, setPortfolioData] = useState(initialData);
+  const { portfolio, updateProjects } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof projectsSchema>>({
     resolver: zodResolver(projectsSchema),
-    defaultValues: { projects: portfolioData.projects },
+    defaultValues: { projects: portfolio.projects },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -53,15 +51,11 @@ export default function ProjectsPage() {
   });
 
   const onSubmit = (values: z.infer<typeof projectsSchema>) => {
-    setPortfolioData((prev) => ({
-      ...prev,
-      projects: values.projects as Project[],
-    }));
+    updateProjects(values.projects);
     toast({
       title: "Projects Updated",
       description: "Your project information has been saved.",
     });
-    console.log("Updated portfolio data:", { ...portfolioData, projects: values.projects });
   };
   
   const addProject = () => {
@@ -74,7 +68,9 @@ export default function ProjectsPage() {
       github: "",
       demo: "",
     });
-  }
+  };
+
+  form.reset({ projects: portfolio.projects });
 
   return (
     <AdminLayout>
@@ -187,4 +183,3 @@ export default function ProjectsPage() {
     </AdminLayout>
   );
 }
-

@@ -27,7 +27,6 @@ import { ThemeSwitcher } from '@/app/components/ThemeSwitcher';
 import { usePreview } from '@/hooks/use-preview';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
-
 const menuItems = [
   { href: '/admin/profile', label: 'Profile', icon: User },
   { href: '/admin/about', label: 'About Me', icon: Info },
@@ -66,7 +65,6 @@ const AdminNav = () => {
     );
 };
 
-
 const Header = () => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [isLogoutAlertOpen, setIsLogoutAlertOpen] = React.useState(false);
@@ -78,7 +76,6 @@ const Header = () => {
 
   const isAdminPage = pathname.startsWith('/admin');
 
-  // Reset preview when leaving admin pages
   React.useEffect(() => {
     if (!isAdminPage) {
       setIsPreview(false);
@@ -88,7 +85,7 @@ const Header = () => {
   const handleSecretCodeSubmit = () => {
     if (secretCode === adminCredentials.secretCode) {
       setIsDialogOpen(false);
-      router.push('/admin');
+      router.push('/admin/profile');
     } else {
       toast({
         variant: 'destructive',
@@ -99,11 +96,19 @@ const Header = () => {
   };
   
   const handleLogout = () => {
-    // In a real app, you would clear the user's session/token here
     setIsLogoutAlertOpen(false);
     router.push("/");
   };
 
+  const handlePreviewToggle = () => {
+    const newPreviewState = !isPreview;
+    setIsPreview(newPreviewState);
+    if (newPreviewState) {
+        window.open('/', '_blank', 'noopener,noreferrer');
+    }
+  }
+
+  const paddingTop = isAdminPage ? 'pt-[113px]' : 'pt-16';
 
   return (
     <>
@@ -138,15 +143,13 @@ const Header = () => {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <Button variant="ghost" asChild size="icon" className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
-                   <Link href="/" target="_blank" onClick={(e) => {
-                     e.preventDefault();
-                     setIsPreview(!isPreview);
-                     const newWindow = window.open('/', '_blank', 'noopener,noreferrer');
-                     if (newWindow) newWindow.opener = null;
-                   }}>
+                <Button 
+                    variant="ghost" 
+                    onClick={handlePreviewToggle}
+                    size="icon" 
+                    className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10"
+                >
                     {isPreview ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                   </Link>
                 </Button>
               </>
             )}
@@ -165,11 +168,12 @@ const Header = () => {
           </nav>
         </div>
         {isAdminPage && (
-          <div className="container mx-auto border-b">
+          <div className="container mx-auto border-b h-[49px] flex items-center">
             <AdminNav />
           </div>
         )}
       </header>
+      <div className={paddingTop} />
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

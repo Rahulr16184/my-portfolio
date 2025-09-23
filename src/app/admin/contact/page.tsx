@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 import AdminLayout from "../layout";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,8 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { portfolioData as initialData } from "@/lib/portfolio-data";
-import { Contact } from "@/lib/types";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 
 const contactSchema = z.object({
@@ -30,24 +28,22 @@ const contactSchema = z.object({
 
 export default function ContactPage() {
   const { toast } = useToast();
-  const [portfolioData, setPortfolioData] = useState(initialData);
+  const { portfolio, updateContact } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
-    defaultValues: portfolioData.contact,
+    defaultValues: portfolio.contact,
   });
 
   const onSubmit = (values: z.infer<typeof contactSchema>) => {
-    setPortfolioData((prev) => ({
-      ...prev,
-      contact: values as Contact,
-    }));
+    updateContact(values);
     toast({
       title: "Contact Info Updated",
       description: "Your contact details have been saved.",
     });
-    console.log("Updated portfolio data:", { ...portfolioData, contact: values });
   };
+
+  form.reset(portfolio.contact);
 
   return (
     <AdminLayout>

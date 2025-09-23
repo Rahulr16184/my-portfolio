@@ -1,0 +1,35 @@
+
+import { Profile } from "@/lib/types";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+
+interface HeroSectionProps {
+    data: Profile;
+}
+
+export default function HeroSection({ data }: HeroSectionProps) {
+    return (
+        <section id="home" className="text-center flex flex-col items-center">
+            {data.profilePhoto && (
+                <Image
+                    src={data.profilePhoto}
+                    alt={data.name}
+                    width={150}
+                    height={150}
+                    className="rounded-full mb-4 shadow-lg"
+                    priority
+                />
+            )}
+            <h1 className="text-5xl md:text-6xl font-bold font-headline mt-4">{data.name}</h1>
+            <p className="mt-2 text-xl md:text-2xl text-muted-foreground">{data.role}</p>
+            <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl">{data.tagline}</p>
+            {data.resumeUrl && (
+                <Button asChild className="mt-8" size="lg">
+                    <a href={data.resumeUrl} target="_blank" rel="noopener noreferrer">
+                        Download Resume
+                    </a>
+                </Button>
+            )}
+        </section>
+    );
+}

@@ -17,8 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { portfolioData as initialData } from "@/lib/portfolio-data";
-import { Skills } from "@/lib/types";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2 } from "lucide-react";
 
@@ -31,10 +30,9 @@ const skillsSchema = z.object({
 
 type SkillCategory = "frontend" | "backend" | "databases" | "tools";
 
-
 export default function SkillsPage() {
   const { toast } = useToast();
-  const [portfolioData, setPortfolioData] = useState(initialData);
+  const { portfolio, updateSkills } = usePortfolioStore();
   const [newSkills, setNewSkills] = useState({
     frontend: "",
     backend: "",
@@ -44,7 +42,7 @@ export default function SkillsPage() {
 
   const form = useForm<z.infer<typeof skillsSchema>>({
     resolver: zodResolver(skillsSchema),
-    defaultValues: portfolioData.skills,
+    defaultValues: portfolio.skills,
   });
 
   const { control } = form;
@@ -70,16 +68,14 @@ export default function SkillsPage() {
   };
 
   const onSubmit = (values: z.infer<typeof skillsSchema>) => {
-    setPortfolioData((prev) => ({
-      ...prev,
-      skills: values as Skills,
-    }));
+    updateSkills(values);
     toast({
       title: "Skills Updated",
       description: "Your skills have been saved.",
     });
-    console.log("Updated portfolio data:", { ...portfolioData, skills: values });
   };
+  
+  form.reset(portfolio.skills);
 
   return (
     <AdminLayout>

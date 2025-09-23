@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 import AdminLayout from "../layout";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,8 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { portfolioData as initialData } from "@/lib/portfolio-data";
-import { Education } from "@/lib/types";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -38,11 +36,11 @@ const educationSchema = z.object({
 
 export default function EducationPage() {
   const { toast } = useToast();
-  const [portfolioData, setPortfolioData] = useState(initialData);
+  const { portfolio, updateEducation } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof educationSchema>>({
     resolver: zodResolver(educationSchema),
-    defaultValues: { education: portfolioData.education },
+    defaultValues: { education: portfolio.education },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -51,15 +49,11 @@ export default function EducationPage() {
   });
 
   const onSubmit = (values: z.infer<typeof educationSchema>) => {
-    setPortfolioData((prev) => ({
-      ...prev,
-      education: values.education as Education[],
-    }));
+    updateEducation(values.education);
     toast({
       title: "Education Updated",
       description: "Your education history has been saved.",
     });
-    console.log("Updated portfolio data:", { ...portfolioData, education: values.education });
   };
   
   const addEducation = () => {
@@ -70,7 +64,9 @@ export default function EducationPage() {
       duration: "",
       desc: "",
     });
-  }
+  };
+
+  form.reset({ education: portfolio.education });
 
   return (
     <AdminLayout>

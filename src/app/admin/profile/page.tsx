@@ -1,8 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
-import AdminLayout from "../layout";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -18,9 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { portfolioData as initialData } from "@/lib/portfolio-data";
-import { Profile } from "@/lib/types";
+import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
+import AdminLayout from "../layout";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -32,25 +30,24 @@ const profileSchema = z.object({
 
 export default function ProfilePage() {
   const { toast } = useToast();
-  const [portfolioData, setPortfolioData] = useState(initialData);
+  const { portfolio, updateProfile } = usePortfolioStore();
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
-    defaultValues: portfolioData.profile,
+    defaultValues: portfolio.profile,
   });
 
   const onSubmit = (values: z.infer<typeof profileSchema>) => {
-    setPortfolioData((prev) => ({
-      ...prev,
-      profile: values as Profile,
-    }));
+    updateProfile(values);
     toast({
       title: "Profile Updated",
       description: "Your profile information has been saved.",
     });
-    // Here you would typically save the data to a backend/DB
-    console.log("Updated portfolio data:", { ...portfolioData, profile: values });
   };
+  
+  // Watch for external state changes and reset the form
+  const { name, role, tagline, resumeUrl, profilePhoto } = portfolio.profile;
+  form.reset({ name, role, tagline, resumeUrl, profilePhoto });
 
   return (
     <AdminLayout>
