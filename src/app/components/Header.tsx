@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from 'react';
@@ -41,7 +42,7 @@ const menuItems = [
 const AdminNav = () => {
     const pathname = usePathname();
     return (
-        <div className="relative border-b">
+        <div className="relative">
             <ScrollArea className="max-w-full whitespace-nowrap">
                 <nav className="flex items-center gap-4 px-4">
                     {menuItems.map((item) => (
@@ -118,8 +119,8 @@ const Header = () => {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300",
-          isScrolled ? "bg-header-background/80 backdrop-blur-sm border-b" : "bg-header-background"
+          "fixed top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300 border-b",
+          isScrolled ? "bg-header-background/80 backdrop-blur-sm" : "bg-header-background"
         )}
       >
         <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
