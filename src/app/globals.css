@@ -65,7 +65,7 @@
 
 @layer utilities {
   .fade-in-up {
-    animation: fade-in-up 0.8s ease-in-out both;
+    animation: fade-in-up 0.8s ease-out both;
   }
 
   @keyframes fade-in-up {
