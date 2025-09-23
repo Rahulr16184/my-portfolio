@@ -1,70 +1,48 @@
 
 "use client";
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
-import { Menu, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Home, User, Laptop, Briefcase, GraduationCap, Mail, Info } from 'lucide-react';
 
 const navItems = [
-  { href: '#home', label: 'Home' },
-  { href: '#about', label: 'About' },
-  { href: '#skills', label: 'Skills' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#education', label: 'Education' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#home', label: 'Home', icon: Home },
+  { href: '#about', label: 'About', icon: Info },
+  { href: '#skills', label: 'Skills', icon: Laptop },
+  { href: '#projects', label: 'Projects', icon: Briefcase },
+  { href: '#experience', label: 'Experience', icon: Briefcase },
+  { href: '#education', label: 'Education', icon: GraduationCap },
+  { href: '#contact', label: 'Contact', icon: Mail },
 ];
 
 export default function PublicNav() {
-  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const handleLinkClick = () => {
-    setIsOpen(false);
-  };
+  // In a single-page portfolio, we can use a hash to track active state, but it requires more complex logic.
+  // For now, we'll just style the links for hover/focus states.
+  // A more advanced implementation could use IntersectionObserver to highlight the active link.
 
   return (
-    <>
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex gap-1">
-        {navItems.map((item) => (
-          <Button key={item.label} asChild variant="ghost" className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
-            <Link href={item.href}>{item.label}</Link>
-          </Button>
-        ))}
-      </nav>
-
-      {/* Mobile Navigation */}
-      <div className="md:hidden">
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Open menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left">
-            <nav className="flex flex-col gap-4 mt-8">
-               <h2 className="text-2xl font-bold text-primary mb-4 text-center">Menu</h2>
-              {navItems.map((item) => (
-                  <Button
-                    key={item.label}
-                    asChild
-                    variant="ghost"
-                    className="justify-start text-lg"
-                    onClick={handleLinkClick}
-                  >
-                    <Link href={item.href}>{item.label}</Link>
-                  </Button>
-              ))}
-            </nav>
-          </SheetContent>
-        </Sheet>
-      </div>
-    </>
+    <ScrollArea className="w-full whitespace-nowrap">
+        <nav className="flex w-max space-x-4 px-4">
+            {navItems.map((item) => (
+                <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                        "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                        "text-muted-foreground hover:bg-muted"
+                        // Add active link styling logic here if needed
+                    )}
+                >
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.label}</span>
+                </Link>
+            ))}
+        </nav>
+        <ScrollBar orientation="horizontal" className="mt-2" />
+    </ScrollArea>
   );
 }

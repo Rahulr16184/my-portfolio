@@ -69,7 +69,8 @@ const Header = () => {
     setIsPreview(!isPreview);
   }
 
-  const paddingTop = isAdminPage && !isLoginPage ? 'pt-[113px]' : 'pt-16';
+  const showSubNav = (isAdminPage && !isLoginPage && !isPreview) || !isAdminPage;
+  const paddingTop = showSubNav ? 'pt-[113px]' : 'pt-16';
 
   return (
     <>
@@ -82,7 +83,7 @@ const Header = () => {
           "container mx-auto flex h-16 items-center justify-between px-4 md:px-6 border-b"
         )}>
           <div className="flex-1 flex items-center justify-start gap-2">
-            {isAdminPage && !isLoginPage ? (
+            {isAdminPage && !isLoginPage && (
               <>
                 <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
                   <AlertDialogTrigger asChild>
@@ -113,7 +114,7 @@ const Header = () => {
                     {isPreview ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </Button>
               </>
-            ) : <PublicNav />}
+            )}
           </div>
           <h1 className="text-center font-poppins font-bold text-xl uppercase text-primary">
             <Link href="/">MY PORTFOLIO</Link>
@@ -128,10 +129,10 @@ const Header = () => {
             )}
           </nav>
         </div>
-        {isAdminPage && !isLoginPage && !isPreview && (
-          <div className="container mx-auto border-b h-[49px] flex items-center">
-            <AdminNav />
-          </div>
+        {showSubNav && (
+            <div className="container mx-auto border-b h-[49px] flex items-center">
+                {isAdminPage ? <AdminNav /> : <PublicNav />}
+            </div>
         )}
       </header>
       <div className={paddingTop} />
