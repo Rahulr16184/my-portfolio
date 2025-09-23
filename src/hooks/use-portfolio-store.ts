@@ -57,6 +57,11 @@ const migrateData = (data: any): PortfolioData => {
   if (!migratedData.theme) {
     migratedData.theme = initialData.theme;
   }
+  // Ensure backgroundTheme property exists
+  if (migratedData.theme && !migratedData.theme.backgroundTheme) {
+    migratedData.theme.backgroundTheme = initialData.theme.backgroundTheme;
+  }
+
 
   return migratedData as PortfolioData;
 }
@@ -167,7 +172,7 @@ export const usePortfolioStore = create<PortfolioState>()(
         }),
       updateTheme: (theme) =>
         set((state) => {
-           const newState = { portfolio: { ...state.portfolio, theme } };
+           const newState = { portfolio: { ...state.portfolio, theme: { ...state.portfolio.theme, ...theme } } };
            writeToDb(newState.portfolio);
            return newState;
         }),

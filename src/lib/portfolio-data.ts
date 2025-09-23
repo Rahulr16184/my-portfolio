@@ -63,5 +63,6 @@ export const portfolioData: PortfolioData = {
   },
   theme: {
     accent: '16 93% 63%', // Default: Soft Coral
+    backgroundTheme: 'Default',
   },
 };

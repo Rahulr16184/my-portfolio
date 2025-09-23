@@ -25,6 +25,8 @@
     --input: 210 40% 90%;
     --ring: 16 93% 63%; /* Default Ring */
     --header-background: 0 0% 100%;
+    --background-gradient-light: linear-gradient(to bottom right, hsl(180, 55%, 95%), hsl(200, 60%, 95%));
+    --background-gradient-dark: linear-gradient(to bottom right, hsl(180, 40%, 15%), hsl(220, 40%, 15%));
   }
  
   .dark {
@@ -57,10 +59,10 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-image: linear-gradient(to bottom right, hsl(180, 55%, 95%), hsl(200, 60%, 95%));
+    background-image: var(--background-gradient-light);
   }
   .dark body {
-    background-image: linear-gradient(to bottom right, hsl(180, 40%, 15%), hsl(220, 40%, 15%));
+    background-image: var(--background-gradient-dark);
   }
 }
 
