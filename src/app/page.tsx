@@ -11,6 +11,7 @@ import ExperienceSection from './sections/ExperienceSection';
 import EducationSection from './sections/EducationSection';
 import ContactSection from './sections/ContactSection';
 import { Skeleton } from '@/components/ui/skeleton';
+import AnimatedSeparator from './components/AnimatedSeparator';
 
 export default function PublicPortfolioPage() {
   const { portfolio: data, isLoading } = usePortfolioStore();
@@ -41,16 +42,20 @@ export default function PublicPortfolioPage() {
   }
 
   return (
-    <div className="container mx-auto py-24 px-4 md:px-6">
-      <div className="space-y-24">
-        <HeroSection data={data.profile} />
-        <AboutSection data={data.about} />
-        <SkillsSection data={data.skills} />
-        <ProjectsSection data={data.projects} />
-        <ExperienceSection data={data.experience} />
-        <EducationSection data={data.education} />
-        <ContactSection data={data.contact} />
-      </div>
+    <div className="container mx-auto px-4 md:px-6">
+      <HeroSection data={data.profile} />
+      <AnimatedSeparator />
+      <AboutSection data={data.about} />
+      <AnimatedSeparator />
+      <SkillsSection data={data.skills} />
+      <AnimatedSeparator />
+      <ProjectsSection data={data.projects} />
+      <AnimatedSeparator />
+      <ExperienceSection data={data.experience} />
+      <AnimatedSeparator />
+      <EducationSection data={data.education} />
+      <AnimatedSeparator />
+      <ContactSection data={data.contact} />
     </div>
   );
 }
