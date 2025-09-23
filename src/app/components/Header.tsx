@@ -111,12 +111,10 @@ const Header = () => {
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300 bg-header-background/80 backdrop-blur-sm",
-          isAdminPage ? 'border-b' : ''
         )}
       >
         <div className={cn(
-          "container mx-auto flex h-16 items-center justify-between px-4 md:px-6",
-          !isAdminPage && "border-b"
+          "container mx-auto flex h-16 items-center justify-between px-4 md:px-6 border-b"
         )}>
           <div className="flex-1 flex items-center justify-start gap-2">
             {isAdminPage && (
@@ -167,7 +165,11 @@ const Header = () => {
             )}
           </nav>
         </div>
-        {isAdminPage && <AdminNav />}
+        {isAdminPage && (
+          <div className="container mx-auto border-b">
+            <AdminNav />
+          </div>
+        )}
       </header>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
