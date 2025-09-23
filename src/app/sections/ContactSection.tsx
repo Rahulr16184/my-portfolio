@@ -2,6 +2,7 @@
 import { Contact } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Linkedin, Github, Twitter, Mail, Phone } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ContactSectionProps {
     data: Contact;
@@ -36,13 +37,21 @@ export default function ContactSection({ data }: ContactSectionProps) {
                 <a href={`mailto:${data.email}`}>Contact Me</a>
             </Button>
 
-            <div className="flex justify-center gap-4 mt-8">
-                {data.socials?.map((social) => {
+            <div className="flex justify-center gap-6 mt-12">
+                {data.socials?.map((social, index) => {
                     const Icon = socialIcons[social.platform];
                     if (!Icon || !social.url) return null;
                     return (
-                        <a key={social.id} href={social.url} target="_blank" rel="noopener noreferrer">
-                            <Icon className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors" />
+                        <a 
+                            key={social.id} 
+                            href={social.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="icon-glow"
+                            style={{ animationDelay: `${index * 0.2}s` }}
+                        >
+                            <Icon className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors duration-300" />
+                            <span className="sr-only">{social.platform}</span>
                         </a>
                     )
                 })}

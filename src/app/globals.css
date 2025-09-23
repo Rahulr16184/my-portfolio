@@ -68,6 +68,10 @@
     animation: fade-in-up 0.8s ease-out both;
   }
 
+  .icon-glow {
+    animation: icon-glow-pulse 3s infinite ease-in-out;
+  }
+
   @keyframes fade-in-up {
     from {
       opacity: 0;
@@ -110,6 +114,17 @@
     }
     100% {
       transform: translateX(100%);
+    }
+  }
+
+  @keyframes icon-glow-pulse {
+    0%, 100% {
+      transform: scale(1);
+      filter: drop-shadow(0 0 2px hsl(var(--accent) / 0.7));
+    }
+    50% {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 5px hsl(var(--accent)));
     }
   }
 }
