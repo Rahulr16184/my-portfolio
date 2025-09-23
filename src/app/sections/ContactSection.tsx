@@ -1,6 +1,7 @@
 
 import { Contact } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { Linkedin, Github, Twitter } from "lucide-react";
 
 interface ContactSectionProps {
     data: Contact;
@@ -14,6 +15,23 @@ export default function ContactSection({ data }: ContactSectionProps) {
             <Button asChild size="lg">
                 <a href={`mailto:${data.email}`}>Contact Me</a>
             </Button>
+            <div className="flex justify-center gap-4 mt-8">
+                {data.linkedin && (
+                    <a href={data.linkedin} target="_blank" rel="noopener noreferrer">
+                        <Linkedin className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors" />
+                    </a>
+                )}
+                {data.github && (
+                    <a href={data.github} target="_blank" rel="noopener noreferrer">
+                        <Github className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors" />
+                    </a>
+                )}
+                {data.twitter && (
+                    <a href={data.twitter} target="_blank" rel="noopener noreferrer">
+                        <Twitter className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors" />
+                    </a>
+                )}
+            </div>
         </section>
     );
 }
