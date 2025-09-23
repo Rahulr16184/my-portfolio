@@ -1,24 +1,62 @@
 
-import { portfolioData } from "@/lib/portfolio-data";
+"use client";
+
+import React from 'react';
+import { portfolioData as initialData } from "@/lib/portfolio-data";
 import { PortfolioData } from "@/lib/types";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github } from "lucide-react";
-
+import { usePreview } from '@/hooks/use-preview';
+import { usePortfolioStore } from '@/hooks/use-portfolio-store';
 
 interface PublicPortfolioPageProps {
   data?: PortfolioData;
 }
 
 export default function PublicPortfolioPage({ data: dataProp }: PublicPortfolioPageProps) {
-  const data = dataProp || portfolioData;
+  const { isPreview } = usePreview();
+  const { portfolio: previewData } = usePortfolioStore();
+
+  const [data, setData] = React.useState(dataProp || initialData);
+
+  React.useEffect(() => {
+    if (isPreview) {
+      // In a real app, you might fetch this from a different source
+      // or receive it through a more robust state management solution.
+      // For now, we rely on the hook which uses localStorage.
+      const storedData = localStorage.getItem('portfolio-store');
+      if (storedData) {
+        setData(JSON.parse(storedData).portfolio);
+      } else {
+        setData(previewData);
+      }
+    } else {
+      setData(dataProp || initialData);
+    }
+  }, [isPreview, dataProp, previewData]);
+  
+    React.useEffect(() => {
+    const handleStorageChange = () => {
+      if (isPreview) {
+        const storedData = localStorage.getItem('portfolio-store');
+        if (storedData) {
+          setData(JSON.parse(storedData).portfolio);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [isPreview]);
+
 
   return (
     <div className="container mx-auto py-24 px-4 md:px-6">
       <div className="space-y-16">
         {/* Profile/Hero Section */}
-        <section id="home" className="text-center flex flex-col items-center">
+        <section id="home" className="text-center flex flex-col items-center pt-12">
             {data.profile.profilePhoto && (
                 <Image 
                     src={data.profile.profilePhoto} 
@@ -56,6 +94,7 @@ export default function PublicPortfolioPage({ data: dataProp }: PublicPortfolioP
             <h2 className="text-3xl font-bold font-headline mb-8 text-center">Skills</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {Object.entries(data.skills).map(([category, skills]) => (
+                  skills.length > 0 && (
                     <div key={category} className="bg-card p-6 rounded-lg shadow-sm">
                         <h3 className="text-xl font-bold mb-4 capitalize">{category}</h3>
                         <div className="flex flex-wrap gap-2">
@@ -64,6 +103,7 @@ export default function PublicPortfolioPage({ data: dataProp }: PublicPortfolioP
                             ))}
                         </div>
                     </div>
+                  )
                 ))}
             </div>
         </section>
@@ -105,7 +145,7 @@ export default function PublicPortfolioPage({ data: dataProp }: PublicPortfolioP
             <div className="relative border-l-2 border-primary/20 pl-6 space-y-10">
                  {data.experience.map((exp) => (
                     <div key={exp.id} className="relative">
-                        <div className="absolute -left-7 h-4 w-4 rounded-full bg-primary top-1"></div>
+                        <div className="absolute -left-7 h-4 w-4 rounded-full bg-accent top-1"></div>
                         <p className="text-sm text-muted-foreground">{exp.duration}</p>
                         <h3 className="text-xl font-bold">{exp.role}</h3>
                         <p className="font-semibold text-lg">{exp.company}</p>
@@ -121,7 +161,7 @@ export default function PublicPortfolioPage({ data: dataProp }: PublicPortfolioP
             <div className="relative border-l-2 border-primary/20 pl-6 space-y-10">
                  {data.education.map((edu) => (
                     <div key={edu.id} className="relative">
-                        <div className="absolute -left-7 h-4 w-4 rounded-full bg-primary top-1"></div>
+                        <div className="absolute -left-7 h-4 w-4 rounded-full bg-accent top-1"></div>
                         <p className="text-sm text-muted-foreground">{edu.duration}</p>
                         <h3 className="text-xl font-bold">{edu.degree}</h3>
                         <p className="font-semibold text-lg">{edu.institution}</p>

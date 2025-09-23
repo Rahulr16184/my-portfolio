@@ -1,6 +1,7 @@
 "use client";
 
-import React from 'react';
+import * as React from 'react';
+import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -17,12 +18,54 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Key, LogOut, Eye, EyeOff } from 'lucide-react';
+import { Key, LogOut, Eye, EyeOff, User, Info, Laptop, Briefcase, GraduationCap, Mail, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { adminCredentials } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeSwitcher } from '@/app/components/ThemeSwitcher';
 import { usePreview } from '@/hooks/use-preview';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+
+
+const menuItems = [
+  { href: '/admin', label: 'Dashboard', icon: Home },
+  { href: '/admin/profile', label: 'Profile', icon: User },
+  { href: '/admin/about', label: 'About Me', icon: Info },
+  { href: '/admin/skills', label: 'Skills', icon: Laptop },
+  { href: '/admin/projects', label: 'Projects', icon: Briefcase },
+  { href: '/admin/experience', label: 'Experience', icon: Briefcase },
+  { href: '/admin/education', label: 'Education', icon: GraduationCap },
+  { href: '/admin/contact', label: 'Contact', icon: Mail },
+];
+
+const AdminNav = () => {
+    const pathname = usePathname();
+    return (
+        <div className="relative border-b">
+            <ScrollArea className="max-w-full whitespace-nowrap">
+                <nav className="flex items-center gap-4 px-4">
+                    {menuItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={cn(
+                                "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                                pathname === item.href
+                                ? "bg-primary text-primary-foreground"
+                                : "text-muted-foreground hover:bg-muted"
+                            )}
+                        >
+                            <item.icon className="h-4 w-4" />
+                            <span>{item.label}</span>
+                        </Link>
+                    ))}
+                </nav>
+                <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+        </div>
+    );
+};
+
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = React.useState(false);
@@ -75,7 +118,7 @@ const Header = () => {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          "fixed top-0 left-0 right-0 z-50 flex flex-col transition-all duration-300",
           isScrolled ? "bg-header-background/80 backdrop-blur-sm border-b" : "bg-header-background"
         )}
       >
@@ -103,15 +146,21 @@ const Header = () => {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <Button variant="ghost" size="icon" onClick={() => setIsPreview(!isPreview)} className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
-                  {isPreview ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  <span className="sr-only">Toggle Preview</span>
+                <Button variant="ghost" asChild size="icon" className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
+                   <Link href="/" target="_blank" onClick={(e) => {
+                     e.preventDefault();
+                     setIsPreview(!isPreview);
+                     const newWindow = window.open('/', '_blank', 'noopener,noreferrer');
+                     if (newWindow) newWindow.opener = null;
+                   }}>
+                    {isPreview ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                   </Link>
                 </Button>
               </>
             )}
           </div>
           <h1 className="flex-1 text-center font-poppins font-bold text-xl uppercase text-primary">
-            MY PORTFOLIO
+            <Link href="/">MY PORTFOLIO</Link>
           </h1>
           <nav className="flex flex-1 items-center justify-end gap-2">
             <ThemeSwitcher />
@@ -123,6 +172,7 @@ const Header = () => {
             )}
           </nav>
         </div>
+        {isAdminPage && <AdminNav />}
       </header>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
