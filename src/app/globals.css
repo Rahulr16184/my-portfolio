@@ -4,49 +4,49 @@
 
 @layer base {
   :root {
-    --background: 0 0% 95%; /* light grey */
-    --foreground: 0 0% 15%; /* dark grey, almost black */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
-    --primary: 0 0% 98%; /* white for header text */
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 90%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 90%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 262 52% 50%;
-    --accent-foreground: 0 0% 98%;
+    --background: 210 40% 98%;
+    --foreground: 210 40% 10%;
+    --card: 210 40% 98%;
+    --card-foreground: 210 40% 10%;
+    --popover: 210 40% 98%;
+    --popover-foreground: 210 40% 10%;
+    --primary: 210 40% 9.8%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 210 40% 9.8%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 210 40% 45%;
+    --accent: 16 93% 63%; /* Soft Coral */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 80%;
-    --input: 0 0% 80%;
-    --ring: 262 52% 50%;
-    --header-background: 0 0% 9%; /* black for header */
+    --border: 210 40% 90%;
+    --input: 210 40% 90%;
+    --ring: 16 93% 63%;
+    --header-background: 0 0% 100%;
   }
  
   .dark {
-    --background: 0 0% 15%; /* dark grey */
-    --foreground: 0 0% 95%; /* light grey, almost white */
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 0 0% 9%; /* black for header text */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 20%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 229 53% 52%;
-    --accent-foreground: 0 0% 98%;
+    --background: 210 30% 15%;
+    --foreground: 210 20% 95%;
+    --card: 210 30% 12%;
+    --card-foreground: 210 20% 95%;
+    --popover: 210 30% 12%;
+    --popover-foreground: 210 20% 95%;
+    --primary: 210 20% 98%;
+    --primary-foreground: 210 30% 9.8%;
+    --secondary: 210 30% 18%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 210 30% 18%;
+    --muted-foreground: 210 20% 65%;
+    --accent: 16 85% 55%; /* Soft Coral */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 30%;
-    --input: 0 0% 30%;
-    --ring: 229 53% 52%;
-    --header-background: 0 0% 98%; /* white for header */
+    --border: 210 30% 25%;
+    --input: 210 30% 25%;
+    --ring: 16 85% 55%;
+    --header-background: 210 30% 9.8%;
   }
 }
 
@@ -56,6 +56,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: linear-gradient(to bottom right, hsl(180, 55%, 95%), hsl(200, 60%, 95%));
+  }
+  .dark body {
+    background-image: linear-gradient(to bottom right, hsl(180, 40%, 15%), hsl(220, 40%, 15%));
   }
 }
 
