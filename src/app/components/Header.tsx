@@ -19,9 +19,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Key, LogOut, Eye, EyeOff, User, Info, Laptop, Briefcase, GraduationCap, Mail } from 'lucide-react';
+import { Key, LogOut, Eye, EyeOff, User, Info, Laptop, Briefcase, GraduationCap, Mail, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { adminCredentials } from '@/lib/data';
+import { getAdminCredentials } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeSwitcher } from '@/app/components/ThemeSwitcher';
 import { usePreview } from '@/hooks/use-preview';
@@ -69,6 +69,7 @@ const Header = () => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [isLogoutAlertOpen, setIsLogoutAlertOpen] = React.useState(false);
   const [secretCode, setSecretCode] = React.useState('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { isPreview, setIsPreview } = usePreview();
   const router = useRouter();
   const pathname = usePathname();
@@ -82,10 +83,12 @@ const Header = () => {
     }
   }, [isAdminPage, setIsPreview]);
 
-  const handleSecretCodeSubmit = () => {
-    if (secretCode === adminCredentials.secretCode) {
+  const handleSecretCodeSubmit = async () => {
+    setIsSubmitting(true);
+    const credentials = await getAdminCredentials();
+    if (credentials && secretCode === credentials.secretCode) {
       setIsDialogOpen(false);
-      router.push('/admin/profile');
+      router.push('/admin/login');
     } else {
       toast({
         variant: 'destructive',
@@ -93,6 +96,8 @@ const Header = () => {
         description: 'The secret code you entered is incorrect.',
       });
     }
+    setSecretCode('');
+    setIsSubmitting(false);
   };
   
   const handleLogout = () => {
@@ -104,7 +109,10 @@ const Header = () => {
     const newPreviewState = !isPreview;
     setIsPreview(newPreviewState);
     if (newPreviewState) {
-        window.open('/', '_blank', 'noopener,noreferrer');
+        const previewWindow = window.open('/', '_blank', 'noopener,noreferrer');
+        if (previewWindow) {
+            previewWindow.focus();
+        }
     }
   }
 
@@ -194,11 +202,15 @@ const Header = () => {
                 onChange={(e) => setSecretCode(e.target.value)}
                 className="col-span-3"
                 onKeyDown={(e) => e.key === 'Enter' && handleSecretCodeSubmit()}
+                disabled={isSubmitting}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleSecretCodeSubmit}>Submit</Button>
+            <Button onClick={handleSecretCodeSubmit} disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Submit
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

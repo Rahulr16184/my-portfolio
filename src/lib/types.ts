@@ -60,3 +60,9 @@ export interface PortfolioData {
   education: Education[];
   contact: Contact;
 }
+
+export interface AdminCredentials {
+  email: string;
+  password: string;
+  secretCode: string;
+}

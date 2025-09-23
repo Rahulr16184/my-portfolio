@@ -16,8 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { adminCredentials } from "@/lib/data";
+import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { getAdminCredentials } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -27,6 +27,7 @@ const formSchema = z.object({
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -38,13 +39,15 @@ export default function AdminLoginPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.email === adminCredentials.email && values.password === adminCredentials.password) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    const credentials = await getAdminCredentials();
+
+    if (credentials && values.email === credentials.email && values.password === credentials.password) {
       toast({
         title: "Login Successful",
         description: "Redirecting to admin dashboard...",
       });
-      // In a real app, you'd handle session/token creation here
       router.push("/admin");
     } else {
       toast({
@@ -53,6 +56,7 @@ export default function AdminLoginPage() {
         description: "Invalid email or password.",
       });
     }
+    setIsSubmitting(false);
   }
 
   return (
@@ -109,7 +113,8 @@ export default function AdminLoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Login
               </Button>
             </form>
