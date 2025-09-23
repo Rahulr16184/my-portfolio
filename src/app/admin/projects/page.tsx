@@ -1,6 +1,7 @@
 
 "use client";
 
+import React, { useState } from "react";
 import AdminLayout from "../layout";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,10 +20,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
-import { PlusCircle, Trash2, Loader2, Upload } from "lucide-react";
+import { PlusCircle, Trash2, Loader2, Upload, Save } from "lucide-react";
 import Image from "next/image";
 import { uploadToCloudinary } from "@/lib/cloudinary";
-import { useState } from "react";
 
 const projectSchema = z.object({
   id: z.string(),
@@ -45,16 +45,16 @@ export default function ProjectsPage() {
 
   const form = useForm<z.infer<typeof projectsSchema>>({
     resolver: zodResolver(projectsSchema),
-    values: { projects: portfolio.projects },
+    defaultValues: { projects: portfolio.projects },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control: form.control,
     name: "projects",
   });
   
   const addProject = () => {
-    const newProject = {
+    append({
       id: `proj-${Date.now()}`,
       title: "New Project",
       desc: "A brief description of your awesome project.",
@@ -62,9 +62,15 @@ export default function ProjectsPage() {
       tech: ["Next.js"],
       github: "",
       demo: "",
-    };
-    append(newProject);
-    updateProjects([...portfolio.projects, newProject]);
+    });
+  };
+
+  const onSubmit = (data: z.infer<typeof projectsSchema>) => {
+    updateProjects(data.projects);
+    toast({
+        title: "Success!",
+        description: "Your projects have been saved.",
+    });
   };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -74,12 +80,11 @@ export default function ProjectsPage() {
       try {
         const imageUrl = await uploadToCloudinary(file);
         if (imageUrl) {
-          const updatedProjects = [...form.getValues().projects];
-          updatedProjects[index].imageUrl = imageUrl;
-          updateProjects(updatedProjects);
+          const currentProject = form.getValues().projects[index];
+          update(index, { ...currentProject, imageUrl: imageUrl });
           toast({
-            title: "Image Uploaded",
-            description: "The project image has been saved.",
+            title: "Image Ready",
+            description: "New project image is ready to be saved.",
           });
         } else {
           throw new Error("Upload returned null");
@@ -96,12 +101,12 @@ export default function ProjectsPage() {
     }
   };
 
-  const fileInputRefs = portfolio.projects.map(() => React.createRef<HTMLInputElement>());
+  const fileInputRefs = fields.map(() => React.createRef<HTMLInputElement>());
 
   return (
     <AdminLayout>
        <Form {...form}>
-        <form onChange={() => updateProjects(form.getValues().projects)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Manage Projects</h1>
             <Button type="button" onClick={addProject}>
@@ -214,6 +219,15 @@ export default function ProjectsPage() {
                 </CardContent>
               </Card>
             ))}
+
+            {fields.length > 0 && (
+                <div className="flex justify-end">
+                    <Button type="submit">
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Projects
+                    </Button>
+                </div>
+            )}
           </div>
         </form>
       </Form>

@@ -3,33 +3,22 @@
 
 import { useState } from "react";
 import AdminLayout from "../layout";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { Skills } from "@/lib/types";
 
-const skillsSchema = z.object({
-  frontend: z.array(z.string().min(1)),
-  backend: z.array(z.string().min(1)),
-  databases: z.array(z.string().min(1)),
-  tools: z.array(z.string().min(1)),
-});
-
-type SkillCategory = keyof z.infer<typeof skillsSchema>;
+type SkillCategory = keyof Skills;
 
 export default function SkillsPage() {
   const { portfolio, updateSkills } = usePortfolioStore();
+  const { toast } = useToast();
+  
+  const [skills, setSkills] = useState<Skills>(JSON.parse(JSON.stringify(portfolio.skills)));
   const [newSkills, setNewSkills] = useState({
     frontend: "",
     backend: "",
@@ -37,48 +26,51 @@ export default function SkillsPage() {
     tools: "",
   });
 
-  const form = useForm<z.infer<typeof skillsSchema>>({
-    resolver: zodResolver(skillsSchema),
-    values: portfolio.skills,
-  });
-
   const handleAddNewSkill = (category: SkillCategory) => {
     const skillValue = newSkills[category].trim();
-    if (skillValue) {
-      const currentSkills = form.getValues();
-      const updatedCategory = [...currentSkills[category], skillValue];
-      const newSkillsState = { ...currentSkills, [category]: updatedCategory };
-      updateSkills(newSkillsState);
+    if (skillValue && !skills[category].includes(skillValue)) {
+      const updatedCategory = [...skills[category], skillValue];
+      setSkills(prev => ({ ...prev, [category]: updatedCategory }));
       setNewSkills(prev => ({ ...prev, [category]: "" }));
     }
   };
 
   const handleRemoveSkill = (category: SkillCategory, index: number) => {
-    const currentSkills = form.getValues();
-    const updatedCategory = currentSkills[category].filter((_, i) => i !== index);
-    const newSkillsState = { ...currentSkills, [category]: updatedCategory };
-    updateSkills(newSkillsState);
+    const updatedCategory = skills[category].filter((_, i) => i !== index);
+    setSkills(prev => ({ ...prev, [category]: updatedCategory }));
   };
 
+  const handleSaveChanges = () => {
+    updateSkills(skills);
+    toast({
+      title: "Success",
+      description: "Your skills have been updated.",
+    });
+  }
 
   return (
     <AdminLayout>
       <Card>
         <CardHeader>
-          <CardTitle>Skills</CardTitle>
+            <div className="flex justify-between items-center">
+                <CardTitle>Skills</CardTitle>
+                <Button onClick={handleSaveChanges}>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Skills
+                </Button>
+            </div>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form className="space-y-8">
+            <div className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {(Object.keys(portfolio.skills) as SkillCategory[]).map((category) => (
+                {(Object.keys(skills) as SkillCategory[]).map((category) => (
                   <div key={category} className="space-y-4">
                     <h3 className="text-lg font-medium capitalize">{category === 'tools' ? 'Tools & Platforms' : category}</h3>
-                     <div className="flex flex-wrap gap-2">
-                      {portfolio.skills[category].map((skill, index) => (
-                        <Badge key={index} variant="secondary" className="text-base flex items-center gap-2">
+                     <div className="flex flex-wrap gap-2 min-h-[40px]">
+                      {skills[category].map((skill, index) => (
+                        <Badge key={`${category}-${index}`} variant="secondary" className="text-base flex items-center gap-2">
                           {skill}
-                          <button onClick={() => handleRemoveSkill(category, index)} className="hover:text-destructive">
+                          <button type="button" onClick={() => handleRemoveSkill(category, index)} className="hover:text-destructive">
                             <Trash2 className="h-3 w-3" />
                           </button>
                         </Badge>
@@ -98,8 +90,7 @@ export default function SkillsPage() {
                   </div>
                 ))}
               </div>
-            </form>
-          </Form>
+            </div>
         </CardContent>
       </Card>
     </AdminLayout>

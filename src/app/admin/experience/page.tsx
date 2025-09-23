@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const experienceSchema = z.object({
   id: z.string(),
@@ -34,10 +35,11 @@ const experiencesSchema = z.object({
 
 export default function ExperiencePage() {
   const { portfolio, updateExperience } = usePortfolioStore();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof experiencesSchema>>({
     resolver: zodResolver(experiencesSchema),
-    values: { experience: portfolio.experience },
+    defaultValues: { experience: portfolio.experience },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -46,28 +48,27 @@ export default function ExperiencePage() {
   });
   
   const addExperience = () => {
-    const newEntry = {
+    append({
       id: `exp-${Date.now()}`,
       role: "",
       company: "",
       duration: "",
       desc: "",
-    };
-    append(newEntry);
-    updateExperience([...portfolio.experience, newEntry]);
+    });
   };
 
-  const removeExperience = (index: number) => {
-    remove(index);
-    const currentValues = form.getValues().experience;
-    currentValues.splice(index, 1);
-    updateExperience(currentValues);
-  }
+  const onSubmit = (data: z.infer<typeof experiencesSchema>) => {
+    updateExperience(data.experience);
+    toast({
+        title: "Success!",
+        description: "Your work experience has been saved.",
+    });
+  };
 
   return (
     <AdminLayout>
        <Form {...form}>
-        <form onChange={() => updateExperience(form.getValues().experience)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Manage Experience</h1>
             <Button type="button" onClick={addExperience}>
@@ -81,7 +82,7 @@ export default function ExperiencePage() {
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Experience #{index + 1}</CardTitle>
-                    <Button type="button" variant="ghost" size="icon" onClick={() => removeExperience(index)}>
+                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
                       <Trash2 className="text-destructive" />
                     </Button>
                   </div>
@@ -134,6 +135,14 @@ export default function ExperiencePage() {
                 </CardContent>
               </Card>
             ))}
+             {fields.length > 0 && (
+                <div className="flex justify-end">
+                    <Button type="submit">
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Experience
+                    </Button>
+                </div>
+            )}
           </div>
         </form>
       </Form>

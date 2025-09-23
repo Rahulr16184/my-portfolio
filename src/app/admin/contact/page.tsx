@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,6 +17,8 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
+import { useToast } from "@/hooks/use-toast";
+import { Save } from "lucide-react";
 
 const contactSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -26,11 +29,20 @@ const contactSchema = z.object({
 
 export default function ContactPage() {
   const { portfolio, updateContact } = usePortfolioStore();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
     values: portfolio.contact,
   });
+
+  const onSubmit = (data: z.infer<typeof contactSchema>) => {
+    updateContact(data);
+    toast({
+      title: "Success",
+      description: "Contact information updated successfully.",
+    });
+  };
 
   return (
     <AdminLayout>
@@ -40,7 +52,7 @@ export default function ContactPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onChange={() => updateContact(form.getValues())} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="email"
@@ -95,6 +107,12 @@ export default function ContactPage() {
                   </FormItem>
                 )}
               />
+               <div className="flex justify-end pt-4">
+                <Button type="submit">
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Changes
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

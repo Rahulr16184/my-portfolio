@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const aboutSchema = z.object({
   bio: z.string().min(1, "Bio is required"),
@@ -27,6 +28,7 @@ const aboutSchema = z.object({
 
 export default function AboutPage() {
   const { portfolio, updateAbout } = usePortfolioStore();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof aboutSchema>>({
     resolver: zodResolver(aboutSchema),
@@ -38,16 +40,13 @@ export default function AboutPage() {
     name: "highlights",
   });
 
-  const addHighlight = () => {
-    append("");
-    updateAbout(form.getValues());
-  }
-
-  const removeHighlight = (index: number) => {
-    remove(index);
-     updateAbout(form.getValues());
-  }
-
+  const onSubmit = (data: z.infer<typeof aboutSchema>) => {
+    updateAbout(data);
+    toast({
+      title: "Success",
+      description: "About section updated successfully.",
+    });
+  };
 
   return (
     <AdminLayout>
@@ -57,7 +56,7 @@ export default function AboutPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onChange={() => updateAbout(form.getValues())} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="bio"
@@ -97,7 +96,7 @@ export default function AboutPage() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        onClick={() => removeHighlight(index)}
+                        onClick={() => remove(index)}
                       >
                         <Trash2 className="text-destructive" />
                       </Button>
@@ -107,13 +106,20 @@ export default function AboutPage() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={addHighlight}
+                    onClick={() => append("")}
                   >
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Add Highlight
                   </Button>
                 </div>
                  <FormMessage>{form.formState.errors.highlights?.message}</FormMessage>
+              </div>
+
+              <div className="flex justify-end">
+                <Button type="submit">
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Changes
+                </Button>
               </div>
             </form>
           </Form>

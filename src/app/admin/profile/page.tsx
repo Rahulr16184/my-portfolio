@@ -23,7 +23,7 @@ import AdminLayout from "../layout";
 import Image from "next/image";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -44,6 +44,14 @@ export default function ProfilePage() {
     values: portfolio.profile,
   });
 
+  const onSubmit = (data: z.infer<typeof profileSchema>) => {
+    updateProfile(data);
+    toast({
+      title: "Success",
+      description: "Your profile has been updated.",
+    });
+  };
+
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -52,10 +60,10 @@ export default function ProfilePage() {
         const imageUrl = await uploadToCloudinary(file);
         if (imageUrl) {
           form.setValue("profilePhoto", imageUrl);
-          updateProfile(form.getValues());
+          // We don't call updateProfile here directly, user will save explicitly
           toast({
-            title: "Image Uploaded",
-            description: "Your new profile photo has been saved.",
+            title: "Image Ready",
+            description: "New profile photo is ready. Click 'Save Changes' to apply.",
           });
         } else {
           throw new Error("Upload returned null");
@@ -81,7 +89,7 @@ export default function ProfilePage() {
         <CardContent>
           <Form {...form}>
             <form
-              onChange={() => updateProfile(form.getValues())}
+              onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-6"
             >
                <FormField
@@ -177,6 +185,12 @@ export default function ProfilePage() {
                   </FormItem>
                 )}
               />
+              <div className="flex justify-end pt-4">
+                <Button type="submit">
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Changes
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

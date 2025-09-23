@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const educationItemSchema = z.object({
   id: z.string(),
@@ -34,10 +35,11 @@ const educationSchema = z.object({
 
 export default function EducationPage() {
   const { portfolio, updateEducation } = usePortfolioStore();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof educationSchema>>({
     resolver: zodResolver(educationSchema),
-    values: { education: portfolio.education },
+    defaultValues: { education: portfolio.education },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -46,28 +48,27 @@ export default function EducationPage() {
   });
   
   const addEducation = () => {
-    const newEntry = {
+    append({
       id: `edu-${Date.now()}`,
       degree: "",
       institution: "",
       duration: "",
       desc: "",
-    };
-    append(newEntry);
-    updateEducation([...portfolio.education, newEntry]);
+    });
+  };
+
+  const onSubmit = (data: z.infer<typeof educationSchema>) => {
+    updateEducation(data.education);
+    toast({
+      title: "Success!",
+      description: "Your education history has been saved.",
+    });
   };
   
-  const removeEducation = (index: number) => {
-    remove(index);
-    const currentValues = form.getValues().education;
-    currentValues.splice(index, 1);
-    updateEducation(currentValues);
-  }
-
   return (
     <AdminLayout>
        <Form {...form}>
-        <form onChange={() => updateEducation(form.getValues().education)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Manage Education</h1>
             <Button type="button" onClick={addEducation}>
@@ -81,7 +82,7 @@ export default function EducationPage() {
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Education #{index + 1}</CardTitle>
-                    <Button type="button" variant="ghost" size="icon" onClick={() => removeEducation(index)}>
+                    <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
                       <Trash2 className="text-destructive" />
                     </Button>
                   </div>
@@ -134,6 +135,14 @@ export default function EducationPage() {
                 </CardContent>
               </Card>
             ))}
+             {fields.length > 0 && (
+                <div className="flex justify-end">
+                    <Button type="submit">
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Education
+                    </Button>
+                </div>
+            )}
           </div>
         </form>
       </Form>
