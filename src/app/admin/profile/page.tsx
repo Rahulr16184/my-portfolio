@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from 'react';
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -23,14 +23,20 @@ import AdminLayout from "../layout";
 import Image from "next/image";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { useState } from "react";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, PlusCircle, Trash2 } from "lucide-react";
+
+const resumeSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Resume name is required"),
+  url: z.string().url("Must be a valid URL").min(1, "URL is required"),
+});
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
   role: z.string().min(1, "Role is required"),
   tagline: z.string().min(1, "Tagline is required"),
-  resumeUrl: z.string().url().or(z.literal("")).optional(),
   profilePhoto: z.string().url().or(z.literal("")).optional(),
+  resumes: z.array(resumeSchema),
 });
 
 export default function ProfilePage() {
@@ -42,6 +48,11 @@ export default function ProfilePage() {
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     values: portfolio.profile,
+  });
+
+  const { fields: resumeFields, append: appendResume, remove: removeResume } = useFieldArray({
+    control: form.control,
+    name: "resumes",
   });
 
   const onSubmit = (data: z.infer<typeof profileSchema>) => {
@@ -60,7 +71,6 @@ export default function ProfilePage() {
         const imageUrl = await uploadToCloudinary(file);
         if (imageUrl) {
           form.setValue("profilePhoto", imageUrl);
-          // We don't call updateProfile here directly, user will save explicitly
           toast({
             title: "Image Ready",
             description: "New profile photo is ready. Click 'Save Changes' to apply.",
@@ -172,19 +182,63 @@ export default function ProfilePage() {
                   </FormItem>
                 )}
               />
-               <FormField
-                control={form.control}
-                name="resumeUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Resume URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://example.com/resume.pdf" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              
+              <div>
+                <FormLabel>Resume Links</FormLabel>
+                <div className="space-y-4 mt-2">
+                  {resumeFields.map((field, index) => (
+                    <Card key={field.id} className="p-4 bg-muted/50">
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <FormField
+                          control={form.control}
+                          name={`resumes.${index}.name`}
+                          render={({ field }) => (
+                            <FormItem className="flex-grow">
+                              <FormLabel className="text-xs">Button Label</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g., Official Resume" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`resumes.${index}.url`}
+                          render={({ field }) => (
+                            <FormItem className="flex-grow">
+                              <FormLabel className="text-xs">File URL</FormLabel>
+                              <FormControl>
+                                <Input placeholder="https://example.com/resume.pdf" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                         <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeResume(index)}
+                          className="self-end"
+                        >
+                          <Trash2 className="text-destructive" />
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendResume({ id: `resume-${Date.now()}`, name: "New Resume", url: "" })}
+                  >
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Resume
+                  </Button>
+                </div>
+              </div>
+
               <div className="flex justify-end pt-4">
                 <Button type="submit">
                   <Save className="mr-2 h-4 w-4" />

@@ -1,7 +1,7 @@
 
 import { create } from 'zustand';
 import { portfolioData as initialData } from '@/lib/portfolio-data';
-import { PortfolioData, Profile, About, Skills, Project, Experience, Education, Contact } from '@/lib/types';
+import { PortfolioData, Profile, About, Skills, Project, Experience, Education, Contact, Resume } from '@/lib/types';
 import { getPortfolioData, savePortfolioData } from '@/lib/firebase';
 
 const LOCAL_STORAGE_KEY = 'portfolio-data';
@@ -20,10 +20,13 @@ interface PortfolioState {
   updateContact: (contact: Contact) => void;
 }
 
-// Helper to migrate old contact structure
-const migrateContactData = (data: any): PortfolioData => {
-  if (data.contact && !data.contact.socials) {
-    const oldContact = data.contact as { email: string; linkedin?: string; github?: string; twitter?: string; };
+// Helper to migrate old data structures
+const migrateData = (data: any): PortfolioData => {
+  let migratedData = { ...data };
+
+  // Migrate old contact structure
+  if (migratedData.contact && !migratedData.contact.socials) {
+    const oldContact = migratedData.contact as { email: string; linkedin?: string; github?: string; twitter?: string; };
     const newContact: Contact = {
       email: oldContact.email,
       socials: [],
@@ -32,9 +35,24 @@ const migrateContactData = (data: any): PortfolioData => {
     if (oldContact.github) newContact.socials.push({ id: `social-${Date.now()}-gh`, platform: 'github', url: oldContact.github });
     if (oldContact.twitter) newContact.socials.push({ id: `social-${Date.now()}-tw`, platform: 'twitter', url: oldContact.twitter });
     
-    return { ...data, contact: newContact };
+    migratedData.contact = newContact;
   }
-  return data as PortfolioData;
+
+  // Migrate old resumeUrl to new resumes array
+  if (migratedData.profile && migratedData.profile.resumeUrl && !migratedData.profile.resumes) {
+    const oldProfile = migratedData.profile as { resumeUrl: string };
+    const newResumes: Resume[] = [];
+    if (oldProfile.resumeUrl) {
+      newResumes.push({ id: `resume-${Date.now()}`, name: "Download Resume", url: oldProfile.resumeUrl });
+    }
+    migratedData.profile = { ...migratedData.profile, resumes: newResumes };
+    delete migratedData.profile.resumeUrl;
+  } else if (migratedData.profile && !migratedData.profile.resumes) {
+    // If resumes is missing completely
+    migratedData.profile.resumes = [];
+  }
+
+  return migratedData as PortfolioData;
 }
 
 
@@ -63,7 +81,7 @@ export const usePortfolioStore = create<PortfolioState>()(
         try {
             const remoteData = await getPortfolioData();
             if (remoteData) {
-                const migratedData = migrateContactData(remoteData);
+                const migratedData = migrateData(remoteData);
                 set({ portfolio: migratedData, isLoading: false });
                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(migratedData));
             } else {
@@ -71,11 +89,11 @@ export const usePortfolioStore = create<PortfolioState>()(
                 const localData = localStorage.getItem(LOCAL_STORAGE_KEY);
                 if (localData) {
                    const parsedData = JSON.parse(localData);
-                   const migratedData = migrateContactData(parsedData);
+                   const migratedData = migrateData(parsedData);
                    set({ portfolio: migratedData, isLoading: false });
                 } else {
                     // If nothing anywhere, use initial data and save it to firebase
-                    const migratedData = migrateContactData(initialData);
+                    const migratedData = migrateData(initialData);
                     set({ portfolio: migratedData, isLoading: false });
                     await savePortfolioData(migratedData);
                 }
@@ -86,10 +104,10 @@ export const usePortfolioStore = create<PortfolioState>()(
                 const localData = localStorage.getItem(LOCAL_STORAGE_KEY);
                 if (localData) {
                     const parsedData = JSON.parse(localData);
-                    const migratedData = migrateContactData(parsedData);
+                    const migratedData = migrateData(parsedData);
                     set({ portfolio: migratedData, isLoading: false });
                 } else {
-                    const migratedData = migrateContactData(initialData);
+                    const migratedData = migrateData(initialData);
                     set({ portfolio: migratedData, isLoading: false });
                 }
             } catch (localError) {

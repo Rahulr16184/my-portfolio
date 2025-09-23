@@ -6,7 +6,9 @@ export const portfolioData: PortfolioData = {
     role: "Full Stack Developer",
     tagline: "Building modern web apps with React, Next.js, and Cloud solutions",
     profilePhoto: "https://picsum.photos/seed/1/300/300",
-    resumeUrl: "",
+    resumes: [
+      { id: "resume-1", name: "Download Resume", url: "" }
+    ],
   },
   about: {
     bio: "I am a passionate developer with experience in building scalable apps. Skilled in Next.js, Firebase, and cloud services, I love creating innovative solutions.",

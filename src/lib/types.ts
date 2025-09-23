@@ -1,9 +1,16 @@
+
+export interface Resume {
+  id: string;
+  name: string;
+  url: string;
+}
+
 export interface Profile {
   name: string;
   role: string;
   tagline: string;
   profilePhoto: string;
-  resumeUrl: string;
+  resumes: Resume[];
 }
 
 export interface About {
