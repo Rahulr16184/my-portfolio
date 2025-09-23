@@ -15,7 +15,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -187,7 +186,7 @@ const Header = () => {
           <DialogHeader>
             <DialogTitle>Enter Secret Code</DialogTitle>
             <DialogDescription>
-              Enter the secret code to access the admin area.
+              To access the admin login page, please enter the secret code provided by the administrator.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
