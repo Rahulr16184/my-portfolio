@@ -1,7 +1,7 @@
 
 import { create } from 'zustand';
 import { portfolioData as initialData } from '@/lib/portfolio-data';
-import { PortfolioData, Profile, About, Skills, Project, Experience, Education, Contact, Resume } from '@/lib/types';
+import { PortfolioData, Profile, About, Skills, Project, Experience, Education, Contact, Resume, Theme } from '@/lib/types';
 import { getPortfolioData, savePortfolioData } from '@/lib/firebase';
 
 const LOCAL_STORAGE_KEY = 'portfolio-data';
@@ -18,11 +18,12 @@ interface PortfolioState {
   updateExperience: (experience: Experience[]) => void;
   updateEducation: (education: Education[]) => void;
   updateContact: (contact: Contact) => void;
+  updateTheme: (theme: Theme) => void;
 }
 
 // Helper to migrate old data structures
 const migrateData = (data: any): PortfolioData => {
-  let migratedData = { ...data };
+  let migratedData = { ...initialData, ...data };
 
   // Migrate old contact structure
   if (migratedData.contact && !migratedData.contact.socials) {
@@ -50,6 +51,11 @@ const migrateData = (data: any): PortfolioData => {
   } else if (migratedData.profile && !migratedData.profile.resumes) {
     // If resumes is missing completely
     migratedData.profile.resumes = [];
+  }
+
+  // Ensure theme object exists
+  if (!migratedData.theme) {
+    migratedData.theme = initialData.theme;
   }
 
   return migratedData as PortfolioData;
@@ -156,6 +162,12 @@ export const usePortfolioStore = create<PortfolioState>()(
       updateContact: (contact) =>
         set((state) => {
            const newState = { portfolio: { ...state.portfolio, contact } };
+           writeToDb(newState.portfolio);
+           return newState;
+        }),
+      updateTheme: (theme) =>
+        set((state) => {
+           const newState = { portfolio: { ...state.portfolio, theme } };
            writeToDb(newState.portfolio);
            return newState;
         }),

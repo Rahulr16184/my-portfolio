@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/app/components/ThemeProvider';
 import { PreviewProvider } from '@/hooks/use-preview';
 import { AppInitializer } from './components/AppInitializer';
 import MainLayout from './components/MainLayout';
+import { ThemeManager } from './components/ThemeManager';
 
 export const metadata: Metadata = {
   title: 'PortfolioForge',
@@ -35,6 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AppInitializer />
+          <ThemeManager />
           <PreviewProvider>
             <Header />
             <MainLayout>{children}</MainLayout>

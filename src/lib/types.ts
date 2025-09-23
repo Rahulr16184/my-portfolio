@@ -63,6 +63,10 @@ export interface Contact {
   socials: SocialLink[];
 }
 
+export interface Theme {
+  accent: string; // Stored as HSL string "H S% L%"
+}
+
 export interface PortfolioData {
   profile: Profile;
   about: About;
@@ -71,4 +75,5 @@ export interface PortfolioData {
   experience: Experience[];
   education: Education[];
   contact: Contact;
+  theme: Theme;
 }

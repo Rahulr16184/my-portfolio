@@ -61,4 +61,7 @@ export const portfolioData: PortfolioData = {
       { id: 'social-2', platform: 'github', url: 'https://www.github.com' },
     ]
   },
+  theme: {
+    accent: '16 93% 63%', // Default: Soft Coral
+  },
 };

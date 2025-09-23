@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { User, Info, Laptop, Briefcase, GraduationCap, Mail } from 'lucide-react';
+import { User, Info, Laptop, Briefcase, GraduationCap, Mail, Palette } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
@@ -15,6 +15,7 @@ const menuItems = [
   { href: '/admin/experience', label: 'Experience', icon: Briefcase },
   { href: '/admin/education', label: 'Education', icon: GraduationCap },
   { href: '/admin/contact', label: 'Contact', icon: Mail },
+  { href: '/admin/appearance', label: 'Appearance', icon: Palette },
 ];
 
 const AdminNav = () => {
