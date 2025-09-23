@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeSwitcher } from '@/app/components/ThemeSwitcher';
 import { usePreview } from '@/hooks/use-preview';
+import PublicNav from './PublicNav';
 
 const AdminNav = dynamic(() => import('./AdminNav'), { ssr: false });
 
@@ -81,7 +82,7 @@ const Header = () => {
           "container mx-auto flex h-16 items-center justify-between px-4 md:px-6 border-b"
         )}>
           <div className="flex-1 flex items-center justify-start gap-2">
-            {isAdminPage && !isLoginPage && (
+            {isAdminPage && !isLoginPage ? (
               <>
                 <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
                   <AlertDialogTrigger asChild>
@@ -112,7 +113,7 @@ const Header = () => {
                     {isPreview ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </Button>
               </>
-            )}
+            ) : <PublicNav />}
           </div>
           <h1 className="flex-1 text-center font-poppins font-bold text-xl uppercase text-primary">
             <Link href="/">MY PORTFOLIO</Link>
@@ -128,7 +129,7 @@ const Header = () => {
           </nav>
         </div>
         {isAdminPage && !isLoginPage && !isPreview && (
-          <div className="container mx-auto border-b h-[49px] flex items-center overflow-x-hidden">
+          <div className="container mx-auto border-b h-[49px] flex items-center">
             <AdminNav />
           </div>
         )}
