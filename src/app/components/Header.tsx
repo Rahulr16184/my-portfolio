@@ -79,12 +79,6 @@ const Header = () => {
   const isAdminPage = pathname.startsWith('/admin');
   const isLoginPage = pathname === '/admin/login';
 
-  React.useEffect(() => {
-    if (!isAdminPage) {
-      setIsPreview(false);
-    }
-  }, [isAdminPage, setIsPreview]);
-
   const handleSecretCodeSubmit = async () => {
     setIsSubmitting(true);
     if (secretCode === SECRET_CODE) {
@@ -107,14 +101,7 @@ const Header = () => {
   };
 
   const handlePreviewToggle = () => {
-    const newPreviewState = !isPreview;
-    setIsPreview(newPreviewState);
-    if (newPreviewState) {
-        const previewWindow = window.open('/', '_blank', 'noopener,noreferrer');
-        if (previewWindow) {
-            previewWindow.focus();
-        }
-    }
+    setIsPreview(!isPreview);
   }
 
   const paddingTop = isAdminPage && !isLoginPage ? 'pt-[113px]' : 'pt-16';
@@ -130,7 +117,7 @@ const Header = () => {
           "container mx-auto flex h-16 items-center justify-between px-4 md:px-6 border-b"
         )}>
           <div className="flex-1 flex items-center justify-start gap-2">
-            {isAdminPage && (
+            {isAdminPage && !isLoginPage && (
               <>
                 <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
                   <AlertDialogTrigger asChild>
@@ -176,7 +163,7 @@ const Header = () => {
             )}
           </nav>
         </div>
-        {isAdminPage && !isLoginPage && (
+        {isAdminPage && !isLoginPage && !isPreview && (
           <div className="container mx-auto border-b h-[49px] flex items-center">
             <AdminNav />
           </div>

@@ -7,6 +7,7 @@ import Header from '@/app/components/Header';
 import { ThemeProvider } from '@/app/components/ThemeProvider';
 import { PreviewProvider } from '@/hooks/use-preview';
 import { AppInitializer } from './components/AppInitializer';
+import MainLayout from './components/MainLayout';
 
 export const metadata: Metadata = {
   title: 'PortfolioForge',
@@ -36,7 +37,7 @@ export default function RootLayout({
           <AppInitializer />
           <PreviewProvider>
             <Header />
-            <main className="flex-1">{children}</main>
+            <MainLayout>{children}</MainLayout>
             <Toaster />
           </PreviewProvider>
         </ThemeProvider>

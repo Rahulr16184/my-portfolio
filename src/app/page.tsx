@@ -2,7 +2,6 @@
 "use client";
 
 import React from 'react';
-import { usePreview } from '@/hooks/use-preview';
 import { usePortfolioStore } from '@/hooks/use-portfolio-store';
 import HeroSection from './sections/HeroSection';
 import AboutSection from './sections/AboutSection';
@@ -14,12 +13,9 @@ import ContactSection from './sections/ContactSection';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function PublicPortfolioPage() {
-  const { isPreview } = usePreview();
-  const { portfolio: storedPortfolio, isLoading } = usePortfolioStore();
+  const { portfolio: data, isLoading } = usePortfolioStore();
 
-  const data = isPreview ? storedPortfolio : usePortfolioStore.getState().portfolio;
-
-  if (isLoading && !isPreview) {
+  if (isLoading) {
     return (
        <div className="container mx-auto py-24 px-4 md:px-6">
          <div className="space-y-24">
