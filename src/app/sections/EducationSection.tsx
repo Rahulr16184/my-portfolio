@@ -12,7 +12,7 @@ export default function EducationSection({ data }: EducationSectionProps) {
             <div className="relative border-l-2 border-primary/20 pl-8 space-y-12">
                 {data.map((edu) => (
                     <div key={edu.id} className="relative">
-                        <div className="absolute -left-[38px] h-6 w-6 rounded-full bg-accent ring-8 ring-background top-1"></div>
+                        <div className="absolute -left-[41px] h-6 w-6 rounded-full bg-accent ring-8 ring-background top-1"></div>
                         <p className="text-sm text-muted-foreground mb-1">{edu.duration}</p>
                         <h3 className="text-2xl font-bold">{edu.degree}</h3>
                         <p className="font-semibold text-xl text-primary/80">{edu.institution}</p>
