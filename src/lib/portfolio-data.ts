@@ -56,6 +56,7 @@ export const portfolioData: PortfolioData = {
       name: "Google Cloud Certified - Associate Cloud Engineer",
       authority: "Google",
       date: "2023",
+      imageUrls: [],
     }
   ],
   education: [
@@ -72,7 +73,8 @@ export const portfolioData: PortfolioData = {
       id: "extra-1",
       title: "Hackathon Club",
       role: "President",
-      desc: "Organized monthly hackathons and coding workshops for over 100 students."
+      desc: "Organized monthly hackathons and coding workshops for over 100 students.",
+      imageUrls: [],
     }
   ],
   contact: {

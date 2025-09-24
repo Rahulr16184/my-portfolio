@@ -35,6 +35,7 @@ export interface Certification {
   name: string;
   authority: string;
   date: string;
+  imageUrls: string[];
 }
 
 export interface Extracurricular {
@@ -42,6 +43,7 @@ export interface Extracurricular {
   title: string;
   role: string;
   desc: string;
+  imageUrls: string[];
 }
 
 export interface Project {

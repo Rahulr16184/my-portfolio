@@ -1,6 +1,7 @@
 
 "use client";
 
+import React, { useState } from "react";
 import AdminLayout from "../layout";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,15 +19,19 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
-import { PlusCircle, Trash2, Save } from "lucide-react";
+import { PlusCircle, Trash2, Save, Loader2, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ConfirmationDialog from "@/app/components/ConfirmationDialog";
+import Image from "next/image";
+import { uploadToCloudinary } from "@/lib/cloudinary";
+import { Separator } from "@/components/ui/separator";
 
 const extracurricularItemSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Title/Organization is required"),
   role: z.string().min(1, "Your role is required"),
   desc: z.string().min(1, "Description is required"),
+  imageUrls: z.array(z.string().url()),
 });
 
 const extracurricularSchema = z.object({
@@ -36,13 +41,14 @@ const extracurricularSchema = z.object({
 export default function ExtracurricularPage() {
   const { portfolio, updateExtracurricular } = usePortfolioStore();
   const { toast } = useToast();
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
 
   const form = useForm<z.infer<typeof extracurricularSchema>>({
     resolver: zodResolver(extracurricularSchema),
     defaultValues: { extracurricular: portfolio.extracurricular },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control: form.control,
     name: "extracurricular",
   });
@@ -53,8 +59,46 @@ export default function ExtracurricularPage() {
       title: "",
       role: "",
       desc: "",
+      imageUrls: [],
     });
   };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadingIndex(index);
+      try {
+        const imageUrl = await uploadToCloudinary(file);
+        if (imageUrl) {
+          const currentActivity = form.getValues().extracurricular[index];
+          const updatedImages = [...currentActivity.imageUrls, imageUrl];
+          update(index, { ...currentActivity, imageUrls: updatedImages });
+          toast({
+            title: "Image Ready",
+            description: "New image is ready to be saved.",
+          });
+        } else {
+          throw new Error("Upload returned null");
+        }
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Upload Failed",
+          description: "Could not upload the image. Please try again.",
+        });
+      } finally {
+        setUploadingIndex(null);
+      }
+    }
+  };
+
+  const removeImage = (activityIndex: number, imgIndex: number) => {
+    const currentActivity = form.getValues().extracurricular[activityIndex];
+    const updatedImages = currentActivity.imageUrls.filter((_, i) => i !== imgIndex);
+    update(activityIndex, { ...currentActivity, imageUrls: updatedImages });
+  };
+  
+  const fileInputRefs = fields.map(() => React.createRef<HTMLInputElement>());
 
   const onSubmit = (data: z.infer<typeof extracurricularSchema>) => {
     updateExtracurricular(data.extracurricular);
@@ -120,6 +164,42 @@ export default function ExtracurricularPage() {
                       </FormItem>
                     )}
                   />
+                  <Separator />
+                   <div className="space-y-2">
+                     <FormLabel>Associated Images</FormLabel>
+                      <div className="flex flex-wrap gap-4">
+                        {field.imageUrls.map((url, imgIndex) => (
+                          <div key={imgIndex} className="relative group">
+                            <Image src={url} alt={`Activity image ${imgIndex + 1}`} width={100} height={100} className="rounded-md object-cover w-24 h-24 border-2 border-muted" />
+                             <Button
+                                type="button"
+                                variant="destructive"
+                                size="icon"
+                                className="absolute -top-2 -right-2 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => removeImage(index, imgIndex)}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                          </div>
+                        ))}
+                      </div>
+                      <input
+                          type="file"
+                          ref={fileInputRefs[index]}
+                          onChange={(e) => handleImageUpload(e, index)}
+                          className="hidden"
+                          accept="image/*"
+                          disabled={uploadingIndex === index}
+                        />
+                        <Button type="button" variant="outline" size="sm" onClick={() => fileInputRefs[index].current?.click()} disabled={uploadingIndex === index}>
+                          {uploadingIndex === index ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                              <Upload className="mr-2 h-4 w-4" />
+                          )}
+                          Upload Image
+                        </Button>
+                   </div>
                 </CardContent>
               </Card>
             ))}

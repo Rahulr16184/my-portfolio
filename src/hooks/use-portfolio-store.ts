@@ -33,6 +33,16 @@ const migrateData = (data: any): PortfolioData => {
   if (!migratedData.certifications) migratedData.certifications = initialData.certifications;
   if (!migratedData.extracurricular) migratedData.extracurricular = initialData.extracurricular;
 
+  // Add imageUrls if missing
+  migratedData.certifications = (migratedData.certifications || []).map((cert: any) => ({
+    ...cert,
+    imageUrls: cert.imageUrls || [],
+  }));
+  migratedData.extracurricular = (migratedData.extracurricular || []).map((activity: any) => ({
+    ...activity,
+    imageUrls: activity.imageUrls || [],
+  }));
+
 
   // Migrate old contact structure
   if (migratedData.contact && !migratedData.contact.socials) {
@@ -49,8 +59,8 @@ const migrateData = (data: any): PortfolioData => {
   }
 
   // Migrate old resumeUrl to new resumes array
-  if (migratedData.profile && migratedData.profile.resumeUrl && !migratedData.profile.resumes) {
-    const oldProfile = migratedData.profile as { resumeUrl: string };
+  if (migratedData.profile && (migratedData.profile as any).resumeUrl && !migratedData.profile.resumes) {
+    const oldProfile = migratedData.profile as any;
     const newResumes: Resume[] = [];
     if (oldProfile.resumeUrl) {
       newResumes.push({ id: `resume-${Date.now()}`, name: "Download Resume", url: oldProfile.resumeUrl });
