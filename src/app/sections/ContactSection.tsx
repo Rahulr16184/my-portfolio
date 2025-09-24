@@ -53,20 +53,18 @@ export default function ContactSection({ data }: ContactSectionProps) {
                             description={`You are about to be redirected to an external site: ${social.url}`}
                             onConfirm={() => handleLinkOpen(social.url)}
                         >
-                            <a 
-                                className="icon-glow"
+                            <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="icon-glow" 
                                 style={{ animationDelay: `${index * 0.2}s` }}
-                                // Prevent default navigation to let dialog handle it
-                                onClick={(e) => e.preventDefault()}
-                                href={social.url}
                             >
                                 <Icon className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors duration-300" />
                                 <span className="sr-only">{social.platform}</span>
-                            </a>
+                            </Button>
                         </ConfirmationDialog>
                     )
                 })}
             </div>
         </section>
     );
-}
