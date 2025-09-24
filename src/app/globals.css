@@ -102,7 +102,7 @@
   .animated-section-title {
     position: relative;
     padding-bottom: 0.5rem;
-    background: linear-gradient(90deg, hsl(var(--foreground)), hsl(var(--accent)), hsl(var(--foreground)));
+    background: linear-gradient(90deg, hsl(var(--accent)), hsl(var(--foreground)), hsl(var(--accent)));
     background-size: 200% auto;
     background-clip: text;
     -webkit-background-clip: text;
