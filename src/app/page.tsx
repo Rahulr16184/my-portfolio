@@ -6,9 +6,12 @@ import { usePortfolioStore } from '@/hooks/use-portfolio-store';
 import HeroSection from './sections/HeroSection';
 import AboutSection from './sections/AboutSection';
 import SkillsSection from './sections/SkillsSection';
+import SoftSkillsSection from './sections/SoftSkillsSection';
 import ProjectsSection from './sections/ProjectsSection';
 import ExperienceSection from './sections/ExperienceSection';
+import CertificationsSection from './sections/CertificationsSection';
 import EducationSection from './sections/EducationSection';
+import ExtracurricularSection from './sections/ExtracurricularSection';
 import ContactSection from './sections/ContactSection';
 import { Skeleton } from '@/components/ui/skeleton';
 import AnimatedSeparator from './components/AnimatedSeparator';
@@ -49,11 +52,17 @@ export default function PublicPortfolioPage() {
       <AnimatedSeparator />
       <SkillsSection data={data.skills} />
       <AnimatedSeparator />
+      <SoftSkillsSection data={data.softSkills} />
+      <AnimatedSeparator />
       <ProjectsSection data={data.projects} />
       <AnimatedSeparator />
       <ExperienceSection data={data.experience} />
       <AnimatedSeparator />
+      <CertificationsSection data={data.certifications} />
+      <AnimatedSeparator />
       <EducationSection data={data.education} />
+      <AnimatedSeparator />
+      <ExtracurricularSection data={data.extracurricular} />
       <AnimatedSeparator />
       <ContactSection data={data.contact} />
     </div>

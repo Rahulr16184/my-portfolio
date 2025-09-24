@@ -45,7 +45,7 @@ export default function SkillsPage() {
     updateSkills(skills);
     toast({
       title: "Success",
-      description: "Your skills have been updated.",
+      description: "Your technical skills have been updated.",
     });
   }
 
@@ -54,10 +54,10 @@ export default function SkillsPage() {
       <Card>
         <CardHeader>
             <div className="flex justify-between items-center">
-                <CardTitle>Skills</CardTitle>
+                <CardTitle>Technical Skills</CardTitle>
                  <ConfirmationDialog
                     title="Save Skills?"
-                    description="Are you sure you want to save your skills?"
+                    description="Are you sure you want to save your technical skills?"
                     onConfirm={handleSaveChanges}
                 >
                     <Button type="button">

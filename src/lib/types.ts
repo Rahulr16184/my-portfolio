@@ -25,6 +25,25 @@ export interface Skills {
   tools: string[];
 }
 
+export interface SoftSkill {
+  id: string;
+  skill: string;
+}
+
+export interface Certification {
+  id: string;
+  name: string;
+  authority: string;
+  date: string;
+}
+
+export interface Extracurricular {
+  id: string;
+  title: string;
+  role: string;
+  desc: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -75,9 +94,12 @@ export interface PortfolioData {
   profile: Profile;
   about: About;
   skills: Skills;
+  softSkills: SoftSkill[];
   projects: Project[];
   experience: Experience[];
+  certifications: Certification[];
   education: Education[];
+  extracurricular: Extracurricular[];
   contact: Contact;
   theme: Theme;
 }

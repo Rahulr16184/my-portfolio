@@ -7,7 +7,7 @@ export const portfolioData: PortfolioData = {
     tagline: "Building modern web apps with React, Next.js, and Cloud solutions",
     profilePhoto: "https://picsum.photos/seed/1/300/300",
     resumes: [
-      { id: "resume-1", name: "Download Resume", url: "" }
+      { id: "resume-1", name: "Download Resume", url: "placeholder.txt" }
     ],
   },
   about: {
@@ -24,6 +24,12 @@ export const portfolioData: PortfolioData = {
     databases: ["Firestore", "MySQL", "MongoDB"],
     tools: ["Git", "Docker", "Cloudinary", "Netlify", "Vercel"],
   },
+  softSkills: [
+    { id: 'ss-1', skill: 'Team Collaboration' },
+    { id: 'ss-2', skill: 'Problem Solving' },
+    { id: 'ss-3', skill: 'Communication' },
+    { id: 'ss-4', skill: 'Adaptability' },
+  ],
   projects: [
     {
       id: "proj-1",
@@ -44,6 +50,14 @@ export const portfolioData: PortfolioData = {
       desc: "Developed web apps using Next.js and Firebase, improving performance by 30%.",
     },
   ],
+  certifications: [
+    {
+      id: "cert-1",
+      name: "Google Cloud Certified - Associate Cloud Engineer",
+      authority: "Google",
+      date: "2023",
+    }
+  ],
   education: [
     {
       id: "edu-1",
@@ -53,12 +67,21 @@ export const portfolioData: PortfolioData = {
       desc: "Graduated with honors, specialized in web development and AI.",
     },
   ],
+  extracurricular: [
+    {
+      id: "extra-1",
+      title: "Hackathon Club",
+      role: "President",
+      desc: "Organized monthly hackathons and coding workshops for over 100 students."
+    }
+  ],
   contact: {
     email: "john.doe@example.com",
     phone: "+1 123 456 7890",
     socials: [
       { id: 'social-1', platform: 'linkedin', url: 'https://www.linkedin.com' },
       { id: 'social-2', platform: 'github', url: 'https://www.github.com' },
+      { id: 'social-3', platform: 'twitter', url: '' },
     ]
   },
   theme: {

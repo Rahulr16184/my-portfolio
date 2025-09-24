@@ -1,7 +1,7 @@
 
 import { create } from 'zustand';
 import { portfolioData as initialData } from '@/lib/portfolio-data';
-import { PortfolioData, Profile, About, Skills, Project, Experience, Education, Contact, Resume, Theme } from '@/lib/types';
+import { PortfolioData, Profile, About, Skills, SoftSkill, Project, Experience, Education, Contact, Resume, Theme, Certification, Extracurricular } from '@/lib/types';
 import { getPortfolioData, savePortfolioData } from '@/lib/firebase';
 
 const LOCAL_STORAGE_KEY = 'portfolio-data';
@@ -14,9 +14,12 @@ interface PortfolioState {
   updateProfile: (profile: Profile) => void;
   updateAbout: (about: About) => void;
   updateSkills: (skills: Skills) => void;
+  updateSoftSkills: (softSkills: SoftSkill[]) => void;
   updateProjects: (projects: Project[]) => void;
   updateExperience: (experience: Experience[]) => void;
+  updateCertifications: (certifications: Certification[]) => void;
   updateEducation: (education: Education[]) => void;
+  updateExtracurricular: (extracurricular: Extracurricular[]) => void;
   updateContact: (contact: Contact) => void;
   updateTheme: (theme: Theme) => void;
 }
@@ -24,6 +27,12 @@ interface PortfolioState {
 // Helper to migrate old data structures
 const migrateData = (data: any): PortfolioData => {
   let migratedData = { ...initialData, ...data };
+
+  // Ensure all new sections exist
+  if (!migratedData.softSkills) migratedData.softSkills = initialData.softSkills;
+  if (!migratedData.certifications) migratedData.certifications = initialData.certifications;
+  if (!migratedData.extracurricular) migratedData.extracurricular = initialData.extracurricular;
+
 
   // Migrate old contact structure
   if (migratedData.contact && !migratedData.contact.socials) {
@@ -144,6 +153,12 @@ export const usePortfolioStore = create<PortfolioState>()(
            writeToDb(newState.portfolio);
            return newState;
         }),
+      updateSoftSkills: (softSkills) =>
+        set((state) => {
+           const newState = { portfolio: { ...state.portfolio, softSkills } };
+           writeToDb(newState.portfolio);
+           return newState;
+        }),
       updateProjects: (projects) =>
         set((state) => {
            const newState = { portfolio: { ...state.portfolio, projects } };
@@ -156,11 +171,23 @@ export const usePortfolioStore = create<PortfolioState>()(
            writeToDb(newState.portfolio);
            return newState;
         }),
+      updateCertifications: (certifications) =>
+        set((state) => {
+            const newState = { portfolio: { ...state.portfolio, certifications } };
+            writeToDb(newState.portfolio);
+            return newState;
+        }),
       updateEducation: (education) =>
         set((state) => {
            const newState = { portfolio: { ...state.portfolio, education } };
            writeToDb(newState.portfolio);
            return newState;
+        }),
+      updateExtracurricular: (extracurricular) =>
+        set((state) => {
+            const newState = { portfolio: { ...state.portfolio, extracurricular } };
+            writeToDb(newState.portfolio);
+            return newState;
         }),
       updateContact: (contact) =>
         set((state) => {
