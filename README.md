@@ -25,9 +25,6 @@ A secure, two-step admin dashboard is the heart of this application. It gives yo
 - **Background Gradients:** Select from a variety of beautiful, pre-designed background gradients, each with unique light and dark mode variants.
 - **Light/Dark Mode:** A seamless theme switcher for user preference.
 
-### AI-Powered Assistance
-- **Tagline Suggestions:** Utilizes **Genkit** and the Gemini AI model to suggest creative and professional taglines for your profile based on your name, role, and skills.
-
 ### Modern & Animated UI
 - **Professional Design:** Built with **ShadCN UI** components and **Tailwind CSS** for a clean, modern, and aesthetically pleasing interface.
 - **Responsive Layout:** The entire application, from the public portfolio to the admin panel, is fully responsive and optimized for desktop, tablet, and mobile devices.
@@ -43,7 +40,6 @@ This project leverages a modern, type-safe, and performant tech stack.
 - **UI Components:** [**ShadCN UI**](https://ui.shadcn.com/)
 - **State Management:** [**Zustand**](https://zustand-demo.pmnd.rs/) (for global portfolio state)
 - **Form Handling:** [**React Hook Form**](https://react-hook-form.com/) with [**Zod**](https://zod.dev/) for validation
-- **AI Integration:** [**Genkit**](https://firebase.google.com/docs/genkit) (with the Google AI plugin for Gemini)
 - **Database:** [**Firebase Firestore**](https://firebase.google.com/docs/firestore) (for storing portfolio data)
 - **Icons:** [**Lucide React**](https://lucide.dev/)
 - **Image Hosting (Optional):** Integrated with Cloudinary for dynamic image uploads.
