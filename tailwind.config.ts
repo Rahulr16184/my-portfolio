@@ -22,6 +22,9 @@ export default {
         code: ['monospace'],
         poppins: ['Poppins', 'sans-serif'],
       },
+       fontWeight: {
+        'headline': 'var(--font-headline-weight)',
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

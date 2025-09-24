@@ -22,7 +22,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
     
     return (
         <section id="contact" className="text-center py-16 fade-in-up section-padding" style={{ animationDelay: '0.7s' }}>
-            <h2 className="text-3xl font-bold font-headline mb-4 animated-section-title">Get In Touch</h2>
+            <h2 className="text-3xl font-headline font-headline mb-4 animated-section-title">Get In Touch</h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">Have a question, a proposal, or just want to say hello? I'd love to hear from you.</p>
 
             <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 mb-8">

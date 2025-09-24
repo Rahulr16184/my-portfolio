@@ -43,6 +43,9 @@ export function ThemeManager() {
     if (theme.headlineFont) {
         root.style.setProperty('--font-headline', theme.headlineFont);
     }
+     if (theme.headlineWeight) {
+        root.style.setProperty('--font-headline-weight', theme.headlineWeight.toString());
+    }
     if (theme.bodyFont) {
         root.style.setProperty('--font-body', theme.bodyFont);
     }

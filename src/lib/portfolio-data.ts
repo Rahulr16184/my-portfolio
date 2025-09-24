@@ -66,5 +66,6 @@ export const portfolioData: PortfolioData = {
     backgroundTheme: 'Default',
     headlineFont: 'Playfair Display',
     bodyFont: 'PT Sans',
+    headlineWeight: 700,
   },
 };

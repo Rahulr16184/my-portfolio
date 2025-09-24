@@ -68,6 +68,7 @@ export interface Theme {
   backgroundTheme: string; // Name of the selected gradient theme
   headlineFont: string;
   bodyFont: string;
+  headlineWeight: number;
 }
 
 export interface PortfolioData {

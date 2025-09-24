@@ -44,6 +44,14 @@ const backgroundGradients: { name: string, light: string, dark: string }[] = [
 
 const headlineFonts = ['Playfair Display', 'Lora', 'Merriweather', 'EB Garamond'];
 const bodyFonts = ['PT Sans', 'Lato', 'Open Sans', 'Roboto'];
+const fontWeights = [
+    { name: 'Normal', value: 400 },
+    { name: 'Medium', value: 500 },
+    { name: 'Semi-bold', value: 600 },
+    { name: 'Bold', value: 700 },
+    { name: 'Extra-bold', value: 800 },
+    { name: 'Black', value: 900 },
+]
 
 export default function AppearancePage() {
   const { portfolio, updateTheme, setPortfolio } = usePortfolioStore();
@@ -51,7 +59,7 @@ export default function AppearancePage() {
   
   const [selectedTheme, setSelectedTheme] = React.useState<Theme>(portfolio.theme);
 
-  const handleValueChange = (key: keyof Theme, value: string) => {
+  const handleValueChange = (key: keyof Theme, value: string | number) => {
     const newTheme = { ...selectedTheme, [key]: value };
     setSelectedTheme(newTheme);
     setPortfolio({ ...portfolio, theme: newTheme });
@@ -132,19 +140,33 @@ export default function AppearancePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                     <Label htmlFor="headline-font">Headline Font</Label>
-                    <Select value={selectedTheme.headlineFont} onValueChange={(value) => handleValueChange('headlineFont', value)}>
-                        <SelectTrigger id="headline-font">
-                            <SelectValue placeholder="Select a font" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {headlineFonts.map(font => (
-                                <SelectItem key={font} value={font} style={{ fontFamily: font }}>
-                                    {font}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <p className="text-muted-foreground text-3xl" style={{ fontFamily: `'${selectedTheme.headlineFont}', serif`}}>The quick brown fox...</p>
+                    <div className='flex gap-2'>
+                        <Select value={selectedTheme.headlineFont} onValueChange={(value) => handleValueChange('headlineFont', value)}>
+                            <SelectTrigger id="headline-font" className="flex-grow">
+                                <SelectValue placeholder="Select a font" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {headlineFonts.map(font => (
+                                    <SelectItem key={font} value={font} style={{ fontFamily: font }}>
+                                        {font}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Select value={selectedTheme.headlineWeight.toString()} onValueChange={(value) => handleValueChange('headlineWeight', parseInt(value))}>
+                            <SelectTrigger id="headline-weight" className="w-[120px]">
+                                <SelectValue placeholder="Weight" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {fontWeights.map(weight => (
+                                    <SelectItem key={weight.value} value={weight.value.toString()}>
+                                        {weight.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <p className="text-muted-foreground text-3xl" style={{ fontFamily: `'${selectedTheme.headlineFont}', serif`, fontWeight: selectedTheme.headlineWeight }}>The quick brown fox...</p>
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="body-font">Body Font</Label>
@@ -160,7 +182,7 @@ export default function AppearancePage() {
                             ))}
                         </SelectContent>
                     </Select>
-                     <p className="text-muted-foreground" style={{ fontFamily: `'${selectedTheme.bodyFont}', sans-serif`}}>...jumps over the lazy dog.</p>
+                     <p className="text-muted-foreground" style={{ fontFamily: `'${selectedTheme.bodyFont}', sans-serif` }}>...jumps over the lazy dog.</p>
                 </div>
               </div>
             </div>
