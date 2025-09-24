@@ -29,7 +29,7 @@ import ConfirmationDialog from '@/app/components/ConfirmationDialog';
 const resumeSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Resume name is required"),
-  url: z.string().url("Must be a valid URL").min(1, "URL is required"),
+  url: z.string().min(1, "File name is required"),
 });
 
 const profileSchema = z.object({
@@ -185,7 +185,7 @@ export default function ProfilePage() {
               />
               
               <div>
-                <FormLabel>Resume Links</FormLabel>
+                <FormLabel>Resume Files</FormLabel>
                 <div className="space-y-4 mt-2">
                   {resumeFields.map((field, index) => (
                     <Card key={field.id} className="p-4 bg-muted/50">
@@ -197,7 +197,7 @@ export default function ProfilePage() {
                             <FormItem className="flex-grow">
                               <FormLabel className="text-xs">Button Label</FormLabel>
                               <FormControl>
-                                <Input placeholder="e.g., Official Resume" {...field} />
+                                <Input placeholder="e.g., Download PDF" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -208,9 +208,9 @@ export default function ProfilePage() {
                           name={`resumes.${index}.url`}
                           render={({ field }) => (
                             <FormItem className="flex-grow">
-                              <FormLabel className="text-xs">File URL</FormLabel>
+                              <FormLabel className="text-xs">File Name</FormLabel>
                               <FormControl>
-                                <Input placeholder="https://example.com/resume.pdf" {...field} />
+                                <Input placeholder="my-resume.pdf" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

@@ -1,0 +1,3 @@
+Please delete this file and place your resume (e.g., your-name.pdf) in this directory.
+
+Then, go to the admin panel -> Profile section and enter the exact filename (e.g., "your-name.pdf") in the "File Name" field for your resume link.

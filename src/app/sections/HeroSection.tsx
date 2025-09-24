@@ -36,16 +36,11 @@ export default function HeroSection({ data }: HeroSectionProps) {
             {data.resumes && data.resumes.length > 0 && (
                 <div className="flex flex-wrap justify-center gap-4 mt-8 fade-in-up" style={{ animationDelay: '0.5s' }}>
                     {data.resumes.map((resume) => (
-                        <ConfirmationDialog
-                            key={resume.id}
-                            title="Open Resume?"
-                            description={`You are about to open a new tab to view the resume file. Continue?`}
-                            onConfirm={() => handleResumeOpen(resume.url)}
-                        >
-                             <Button size="lg" disabled={!resume.url}>
-                                {resume.name}
-                            </Button>
-                        </ConfirmationDialog>
+                        <Button key={resume.id} size="lg" asChild disabled={!resume.url}>
+                           <a href={`/resumes/${resume.url}`} download>
+                             {resume.name}
+                           </a>
+                        </Button>
                     ))}
                 </div>
             )}

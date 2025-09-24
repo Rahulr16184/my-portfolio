@@ -2,7 +2,7 @@
 export interface Resume {
   id: string;
   name: string;
-  url: string;
+  url: string; // This will now store the filename, e.g., "my_resume.pdf"
 }
 
 export interface Profile {
