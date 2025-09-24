@@ -83,6 +83,12 @@ const Header = () => {
           "container mx-auto flex h-16 items-center justify-between px-4 md:px-6 border-b"
         )}>
           <div className="flex-1 flex items-center justify-start gap-2">
+            {!isAdminPage && (
+              <Button variant="ghost" size="icon" onClick={() => setIsDialogOpen(true)} className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
+                <Key className="h-5 w-5" />
+                <span className="sr-only">Admin Login</span>
+              </Button>
+            )}
             {isAdminPage && !isLoginPage && (
               <>
                 <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
@@ -121,12 +127,6 @@ const Header = () => {
           </h1>
           <nav className="flex flex-1 items-center justify-end gap-2">
             <ThemeSwitcher />
-            {!isAdminPage && (
-              <Button variant="ghost" size="icon" onClick={() => setIsDialogOpen(true)} className="text-primary hover:text-primary/80 hover:bg-white/10 dark:hover:bg-black/10">
-                <Key className="h-5 w-5" />
-                <span className="sr-only">Admin Login</span>
-              </Button>
-            )}
           </nav>
         </div>
         {showSubNav && (
