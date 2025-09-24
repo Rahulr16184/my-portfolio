@@ -53,13 +53,11 @@ const migrateData = (data: any): PortfolioData => {
     migratedData.profile.resumes = [];
   }
 
-  // Ensure theme object exists
+  // Ensure theme object exists and has all properties
   if (!migratedData.theme) {
     migratedData.theme = initialData.theme;
-  }
-  // Ensure backgroundTheme property exists
-  if (migratedData.theme && !migratedData.theme.backgroundTheme) {
-    migratedData.theme.backgroundTheme = initialData.theme.backgroundTheme;
+  } else {
+    migratedData.theme = { ...initialData.theme, ...migratedData.theme };
   }
 
 

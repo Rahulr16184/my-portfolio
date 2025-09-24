@@ -13,6 +13,8 @@ import { Save, Palette } from 'lucide-react';
 import { Theme } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import ConfirmationDialog from '@/app/components/ConfirmationDialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 const colorSwatches: { name: string, hsl: string }[] = [
   { name: 'Coral', hsl: '16 93% 63%' },
@@ -40,6 +42,8 @@ const backgroundGradients: { name: string, light: string, dark: string }[] = [
   { name: 'Crimson', light: 'linear-gradient(to bottom right, #F5F7FA, #B8C6DB)', dark: 'linear-gradient(to bottom right, #33080a, #6e1014)' },
 ];
 
+const headlineFonts = ['Playfair Display', 'Lora', 'Merriweather', 'EB Garamond'];
+const bodyFonts = ['PT Sans', 'Lato', 'Open Sans', 'Roboto'];
 
 export default function AppearancePage() {
   const { portfolio, updateTheme, setPortfolio } = usePortfolioStore();
@@ -47,14 +51,8 @@ export default function AppearancePage() {
   
   const [selectedTheme, setSelectedTheme] = React.useState<Theme>(portfolio.theme);
 
-  const handleColorSelect = (hsl: string) => {
-    const newTheme = { ...selectedTheme, accent: hsl };
-    setSelectedTheme(newTheme);
-    setPortfolio({ ...portfolio, theme: newTheme });
-  };
-
-  const handleGradientSelect = (themeName: string) => {
-    const newTheme = { ...selectedTheme, backgroundTheme: themeName };
+  const handleValueChange = (key: keyof Theme, value: string) => {
+    const newTheme = { ...selectedTheme, [key]: value };
     setSelectedTheme(newTheme);
     setPortfolio({ ...portfolio, theme: newTheme });
   };
@@ -73,8 +71,8 @@ export default function AppearancePage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2"><Palette/> Appearance</CardTitle>
           <CardDescription>
-            Customize the look and feel of your portfolio by changing the accent color and background gradient.
-            Click a swatch to preview the changes live.
+            Customize the look and feel of your portfolio.
+            Click an option to preview the changes live.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -85,7 +83,7 @@ export default function AppearancePage() {
                 {colorSwatches.map((swatch) => (
                   <div key={swatch.name} className="flex flex-col items-center gap-2">
                     <button
-                      onClick={() => handleColorSelect(swatch.hsl)}
+                      onClick={() => handleValueChange('accent', swatch.hsl)}
                       className="w-12 h-12 rounded-full border-2 transition-all"
                       style={{ 
                         backgroundColor: `hsl(${swatch.hsl})`,
@@ -112,7 +110,7 @@ export default function AppearancePage() {
                 {backgroundGradients.map((gradient) => (
                   <div key={gradient.name} className="flex flex-col items-center gap-2">
                     <button
-                      onClick={() => handleGradientSelect(gradient.name)}
+                      onClick={() => handleValueChange('backgroundTheme', gradient.name)}
                       className={cn(
                         "w-full h-24 rounded-lg border-2 transition-all flex flex-col justify-end p-2",
                         selectedTheme.backgroundTheme === gradient.name ? "border-primary ring-2 ring-primary ring-offset-2" : "border-border"
@@ -126,11 +124,51 @@ export default function AppearancePage() {
                 ))}
               </div>
             </div>
+
+            <Separator />
+
+            <div>
+              <h3 className="text-lg font-medium mb-4">Typography</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                    <Label htmlFor="headline-font">Headline Font</Label>
+                    <Select value={selectedTheme.headlineFont} onValueChange={(value) => handleValueChange('headlineFont', value)}>
+                        <SelectTrigger id="headline-font">
+                            <SelectValue placeholder="Select a font" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {headlineFonts.map(font => (
+                                <SelectItem key={font} value={font} style={{ fontFamily: font }}>
+                                    {font}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <p className="text-muted-foreground text-3xl" style={{ fontFamily: `'${selectedTheme.headlineFont}', serif`}}>The quick brown fox...</p>
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="body-font">Body Font</Label>
+                    <Select value={selectedTheme.bodyFont} onValueChange={(value) => handleValueChange('bodyFont', value)}>
+                        <SelectTrigger id="body-font">
+                            <SelectValue placeholder="Select a font" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {bodyFonts.map(font => (
+                                <SelectItem key={font} value={font} style={{ fontFamily: font }}>
+                                    {font}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                     <p className="text-muted-foreground" style={{ fontFamily: `'${selectedTheme.bodyFont}', sans-serif`}}>...jumps over the lazy dog.</p>
+                </div>
+              </div>
+            </div>
             
             <div className="flex justify-end pt-4">
               <ConfirmationDialog
                 title="Save Theme Changes?"
-                description="This will apply the new accent color and background gradient to your entire portfolio."
+                description="This will apply the new appearance settings to your entire portfolio."
                 onConfirm={handleSaveChanges}
               >
                 <Button type="button">

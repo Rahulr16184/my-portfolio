@@ -24,11 +24,12 @@ export function ThemeManager() {
 
     // Handle Accent Color
     if (theme.accent) {
-      const [h, s, l] = theme.accent.split(" ");
       root.style.setProperty('--accent', theme.accent);
       root.style.setProperty('--ring', theme.accent);
-      const darkHsl = `${h} ${parseInt(s, 10) - 10}% ${parseInt(l, 10) + 10}%`;
-      root.style.setProperty('--accent-dark', darkHsl);
+      
+      const [h, s, l] = theme.accent.split(" ").map(val => parseInt(val.replace('%', '')));
+      const darkAccent = `${h} ${s - 5}% ${l + 10 > 100 ? 100 : l + 10}%`;
+      root.style.setProperty('--accent-dark', darkAccent);
     }
     
     // Handle Background Gradient
@@ -36,6 +37,14 @@ export function ThemeManager() {
       const selectedGradient = backgroundGradients[theme.backgroundTheme] || backgroundGradients.Default;
       root.style.setProperty('--background-gradient-light', selectedGradient.light);
       root.style.setProperty('--background-gradient-dark', selectedGradient.dark);
+    }
+
+    // Handle Fonts
+    if (theme.headlineFont) {
+        root.style.setProperty('--font-headline', theme.headlineFont);
+    }
+    if (theme.bodyFont) {
+        root.style.setProperty('--font-body', theme.bodyFont);
     }
 
   }, [theme]);

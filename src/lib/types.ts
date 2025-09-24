@@ -66,6 +66,8 @@ export interface Contact {
 export interface Theme {
   accent: string; // Stored as HSL string "H S% L%"
   backgroundTheme: string; // Name of the selected gradient theme
+  headlineFont: string;
+  bodyFont: string;
 }
 
 export interface PortfolioData {
