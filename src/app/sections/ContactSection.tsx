@@ -1,18 +1,12 @@
 
 import { Contact } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Linkedin, Github, Twitter, Mail, Phone } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Mail, Phone } from "lucide-react";
+import Image from "next/image";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 
 interface ContactSectionProps {
     data: Contact;
-}
-
-const socialIcons = {
-    linkedin: Linkedin,
-    github: Github,
-    twitter: Twitter,
 }
 
 export default function ContactSection({ data }: ContactSectionProps) {
@@ -44,8 +38,7 @@ export default function ContactSection({ data }: ContactSectionProps) {
 
             <div className="flex justify-center gap-6 mt-12">
                 {data.socials?.map((social, index) => {
-                    const Icon = socialIcons[social.platform];
-                    if (!Icon || !social.url) return null;
+                    if (!social.url) return null;
                     return (
                         <ConfirmationDialog
                             key={social.id}
@@ -53,13 +46,19 @@ export default function ContactSection({ data }: ContactSectionProps) {
                             description={`You are about to be redirected to an external site: ${social.url}`}
                             onConfirm={() => handleLinkOpen(social.url)}
                         >
-                            <Button 
+                             <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="icon-glow" 
+                                className="icon-glow h-auto w-auto p-0 bg-transparent hover:bg-transparent"
                                 style={{ animationDelay: `${index * 0.2}s` }}
                             >
-                                <Icon className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors duration-300" />
+                                <Image
+                                  src={`/icons/${social.platform}.svg`}
+                                  alt={`${social.platform} icon`}
+                                  width={32}
+                                  height={32}
+                                  className="text-muted-foreground hover:text-primary transition-colors duration-300 dark:invert"
+                                />
                                 <span className="sr-only">{social.platform}</span>
                             </Button>
                         </ConfirmationDialog>
