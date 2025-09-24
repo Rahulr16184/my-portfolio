@@ -11,6 +11,7 @@ import { PlusCircle, Trash2, Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Skills } from "@/lib/types";
+import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 
 type SkillCategory = keyof Skills;
 
@@ -54,10 +55,16 @@ export default function SkillsPage() {
         <CardHeader>
             <div className="flex justify-between items-center">
                 <CardTitle>Skills</CardTitle>
-                <Button onClick={handleSaveChanges}>
-                    <Save className="mr-2 h-4 w-4" />
-                    Save Skills
-                </Button>
+                 <ConfirmationDialog
+                    title="Save Skills?"
+                    description="Are you sure you want to save your skills?"
+                    onConfirm={handleSaveChanges}
+                >
+                    <Button type="button">
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Skills
+                    </Button>
+                </ConfirmationDialog>
             </div>
         </CardHeader>
         <CardContent>

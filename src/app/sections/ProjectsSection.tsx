@@ -5,12 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 
 interface ProjectsSectionProps {
     data: Project[];
 }
 
 export default function ProjectsSection({ data }: ProjectsSectionProps) {
+    const handleLinkOpen = (url: string) => {
+        if (url) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+    }
+
     return (
         <section id="projects" className="fade-in-up section-padding" style={{ animationDelay: '0.4s' }}>
             <h2 className="text-3xl font-bold font-headline mb-12 text-center animated-section-title">Projects</h2>
@@ -29,14 +36,22 @@ export default function ProjectsSection({ data }: ProjectsSectionProps) {
                         </CardContent>
                         <CardFooter className="flex items-center gap-4">
                             {project.github && (
-                                <Button variant="outline" asChild>
-                                    <a href={project.github} target="_blank" rel="noopener noreferrer"><Github className="mr-2" /> GitHub</a>
-                                </Button>
+                                <ConfirmationDialog
+                                    title="Open GitHub?"
+                                    description="You are about to be redirected to an external GitHub repository."
+                                    onConfirm={() => handleLinkOpen(project.github!)}
+                                >
+                                    <Button variant="outline"><Github className="mr-2" /> GitHub</Button>
+                                </ConfirmationDialog>
                             )}
                             {project.demo && (
-                                <Button asChild>
-                                    <a href={project.demo} target="_blank" rel="noopener noreferrer"><ExternalLink className="mr-2" /> Live Demo</a>
-                                </Button>
+                                <ConfirmationDialog
+                                    title="Open Live Demo?"
+                                    description="You are about to be redirected to an external site for the live demo."
+                                    onConfirm={() => handleLinkOpen(project.demo!)}
+                                >
+                                    <Button><ExternalLink className="mr-2" /> Live Demo</Button>
+                                </ConfirmationDialog>
                             )}
                         </CardFooter>
                     </Card>

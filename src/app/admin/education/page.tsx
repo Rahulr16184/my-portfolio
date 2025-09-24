@@ -20,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { PlusCircle, Trash2, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 
 const educationItemSchema = z.object({
   id: z.string(),
@@ -137,10 +138,16 @@ export default function EducationPage() {
             ))}
              {fields.length > 0 && (
                 <div className="flex justify-end">
-                    <Button type="submit">
-                        <Save className="mr-2 h-4 w-4" />
-                        Save Education
-                    </Button>
+                    <ConfirmationDialog
+                      title="Save Education History?"
+                      description="Are you sure you want to save all changes to your education history?"
+                      onConfirm={form.handleSubmit(onSubmit)}
+                    >
+                      <Button type="button">
+                          <Save className="mr-2 h-4 w-4" />
+                          Save Education
+                      </Button>
+                    </ConfirmationDialog>
                 </div>
             )}
           </div>

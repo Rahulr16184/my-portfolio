@@ -24,6 +24,7 @@ import Image from "next/image";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { useState } from "react";
 import { Loader2, Save, PlusCircle, Trash2 } from "lucide-react";
+import ConfirmationDialog from '@/app/components/ConfirmationDialog';
 
 const resumeSchema = z.object({
   id: z.string(),
@@ -240,10 +241,16 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex justify-end pt-4">
-                <Button type="submit">
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Changes
-                </Button>
+                <ConfirmationDialog
+                  title="Save Profile?"
+                  description="Are you sure you want to save these profile changes?"
+                  onConfirm={form.handleSubmit(onSubmit)}
+                >
+                  <Button type="button">
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </Button>
+                </ConfirmationDialog>
               </div>
             </form>
           </Form>

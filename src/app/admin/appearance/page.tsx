@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { Save, Palette } from 'lucide-react';
 import { Theme } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
+import ConfirmationDialog from '@/app/components/ConfirmationDialog';
 
 const colorSwatches: { name: string, hsl: string }[] = [
   { name: 'Coral', hsl: '16 93% 63%' },
@@ -127,10 +128,16 @@ export default function AppearancePage() {
             </div>
             
             <div className="flex justify-end pt-4">
-              <Button onClick={handleSaveChanges}>
-                <Save className="mr-2 h-4 w-4" />
-                Save Changes
-              </Button>
+              <ConfirmationDialog
+                title="Save Theme Changes?"
+                description="This will apply the new accent color and background gradient to your entire portfolio."
+                onConfirm={handleSaveChanges}
+              >
+                <Button type="button">
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Changes
+                </Button>
+              </ConfirmationDialog>
             </div>
           </div>
         </CardContent>

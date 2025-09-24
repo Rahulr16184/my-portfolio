@@ -3,6 +3,7 @@ import { Contact } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Linkedin, Github, Twitter, Mail, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 
 interface ContactSectionProps {
     data: Contact;
@@ -15,6 +16,10 @@ const socialIcons = {
 }
 
 export default function ContactSection({ data }: ContactSectionProps) {
+    const handleLinkOpen = (url: string) => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    }
+    
     return (
         <section id="contact" className="text-center py-16 fade-in-up section-padding" style={{ animationDelay: '0.7s' }}>
             <h2 className="text-3xl font-bold font-headline mb-4 animated-section-title">Get In Touch</h2>
@@ -42,17 +47,23 @@ export default function ContactSection({ data }: ContactSectionProps) {
                     const Icon = socialIcons[social.platform];
                     if (!Icon || !social.url) return null;
                     return (
-                        <a 
-                            key={social.id} 
-                            href={social.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="icon-glow"
-                            style={{ animationDelay: `${index * 0.2}s` }}
+                        <ConfirmationDialog
+                            key={social.id}
+                            title={`Redirect to ${social.platform}?`}
+                            description={`You are about to be redirected to an external site: ${social.url}`}
+                            onConfirm={() => handleLinkOpen(social.url)}
                         >
-                            <Icon className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors duration-300" />
-                            <span className="sr-only">{social.platform}</span>
-                        </a>
+                            <a 
+                                className="icon-glow"
+                                style={{ animationDelay: `${index * 0.2}s` }}
+                                // Prevent default navigation to let dialog handle it
+                                onClick={(e) => e.preventDefault()}
+                                href={social.url}
+                            >
+                                <Icon className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors duration-300" />
+                                <span className="sr-only">{social.platform}</span>
+                            </a>
+                        </ConfirmationDialog>
                     )
                 })}
             </div>

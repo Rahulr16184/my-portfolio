@@ -26,6 +26,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { useToast } from "@/hooks/use-toast";
 import { Save, PlusCircle, Trash2 } from "lucide-react";
+import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 
 const socialLinkSchema = z.object({
   id: z.string(),
@@ -170,10 +171,16 @@ export default function ContactPage() {
               </div>
 
                <div className="flex justify-end pt-4">
-                <Button type="submit">
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Changes
-                </Button>
+                 <ConfirmationDialog
+                    title="Save Contact Info?"
+                    description="Are you sure you want to save these contact details?"
+                    onConfirm={form.handleSubmit(onSubmit)}
+                  >
+                    <Button type="button">
+                      <Save className="mr-2 h-4 w-4" />
+                      Save Changes
+                    </Button>
+                 </ConfirmationDialog>
               </div>
             </form>
           </Form>

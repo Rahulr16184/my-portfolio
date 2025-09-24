@@ -20,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePortfolioStore } from "@/hooks/use-portfolio-store";
 import { PlusCircle, Trash2, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 
 const aboutSchema = z.object({
   bio: z.string().min(1, "Bio is required"),
@@ -116,10 +117,16 @@ export default function AboutPage() {
               </div>
 
               <div className="flex justify-end">
-                <Button type="submit">
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Changes
-                </Button>
+                <ConfirmationDialog
+                  title="Save Changes?"
+                  description="Are you sure you want to save the changes to your 'About Me' section?"
+                  onConfirm={form.handleSubmit(onSubmit)}
+                >
+                  <Button type="button">
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </Button>
+                </ConfirmationDialog>
               </div>
             </form>
           </Form>

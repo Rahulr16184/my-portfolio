@@ -23,6 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, Trash2, Loader2, Upload, Save } from "lucide-react";
 import Image from "next/image";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 
 const projectSchema = z.object({
   id: z.string(),
@@ -222,10 +223,16 @@ export default function ProjectsPage() {
 
             {fields.length > 0 && (
                 <div className="flex justify-end">
-                    <Button type="submit">
+                  <ConfirmationDialog
+                    title="Save Projects?"
+                    description="Are you sure you want to save all changes to your projects?"
+                    onConfirm={form.handleSubmit(onSubmit)}
+                  >
+                    <Button type="button">
                         <Save className="mr-2 h-4 w-4" />
                         Save Projects
                     </Button>
+                  </ConfirmationDialog>
                 </div>
             )}
           </div>
