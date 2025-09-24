@@ -47,7 +47,3 @@ This project leverages a modern, type-safe, and performant tech stack.
 - **Database:** [**Firebase Firestore**](https://firebase.google.com/docs/firestore) (for storing portfolio data)
 - **Icons:** [**Lucide React**](https://lucide.dev/)
 - **Image Hosting (Optional):** Integrated with Cloudinary for dynamic image uploads.
-
-## Deployment
-
-Your portfolio is ready to be deployed on the web. For detailed instructions on how to get your site live, please refer to the `DEPLOYMENT_GUIDE.md` file included in this project.
