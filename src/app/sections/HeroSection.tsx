@@ -19,13 +19,13 @@ export default function HeroSection({ data }: HeroSectionProps) {
     return (
         <section id="home" className="text-center flex flex-col items-center section-padding">
             {data.profilePhoto && (
-                <div className="fade-in-up profile-image-container mb-4">
+                <div className="fade-in-up mb-4">
                     <Image
                         src={data.profilePhoto}
                         alt={data.name}
                         width={150}
                         height={150}
-                        className="rounded-full shadow-lg"
+                        className="rounded-full shadow-lg border-4 border-white dark:border-gray-800"
                         priority
                     />
                 </div>
