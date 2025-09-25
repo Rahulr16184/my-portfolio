@@ -30,6 +30,10 @@ export const portfolioData: PortfolioData = {
     { id: 'ss-3', skill: 'Communication' },
     { id: 'ss-4', skill: 'Adaptability' },
   ],
+  languages: [
+    { id: 'lang-1', name: 'English', proficiency: 'Fluent/Native' },
+    { id: 'lang-2', name: 'Spanish', proficiency: 'Professional' },
+  ],
   projects: [
     {
       id: "proj-1",

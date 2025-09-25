@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Home, User, Laptop, Briefcase, GraduationCap, Mail, Info, Award, ToyBrick, HeartHandshake } from 'lucide-react';
+import { Home, User, Laptop, Briefcase, GraduationCap, Mail, Info, Award, ToyBrick, HeartHandshake, Languages } from 'lucide-react';
 
 const navItems = [
   { href: '#home', label: 'Home', icon: Home },
   { href: '#about', label: 'About', icon: Info },
   { href: '#skills', label: 'Tech Skills', icon: Laptop },
   { href: '#soft-skills', label: 'Soft Skills', icon: HeartHandshake },
+  { href: '#languages', label: 'Languages', icon: Languages },
   { href: '#projects', label: 'Projects', icon: Briefcase },
   { href: '#experience', label: 'Experience', icon: Briefcase },
   { href: '#certifications', label: 'Certs', icon: Award },

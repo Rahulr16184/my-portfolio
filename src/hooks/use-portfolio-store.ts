@@ -1,7 +1,7 @@
 
 import { create } from 'zustand';
 import { portfolioData as initialData } from '@/lib/portfolio-data';
-import { PortfolioData, Profile, About, Skills, SoftSkill, Project, Experience, Education, Contact, Resume, Theme, Certification, Extracurricular } from '@/lib/types';
+import { PortfolioData, Profile, About, Skills, SoftSkill, Project, Experience, Education, Contact, Resume, Theme, Certification, Extracurricular, Language } from '@/lib/types';
 import { getPortfolioData, savePortfolioData } from '@/lib/firebase';
 
 const LOCAL_STORAGE_KEY = 'portfolio-data';
@@ -15,6 +15,7 @@ interface PortfolioState {
   updateAbout: (about: About) => void;
   updateSkills: (skills: Skills) => void;
   updateSoftSkills: (softSkills: SoftSkill[]) => void;
+  updateLanguages: (languages: Language[]) => void;
   updateProjects: (projects: Project[]) => void;
   updateExperience: (experience: Experience[]) => void;
   updateCertifications: (certifications: Certification[]) => void;
@@ -32,6 +33,7 @@ const migrateData = (data: any): PortfolioData => {
   if (!migratedData.softSkills) migratedData.softSkills = initialData.softSkills;
   if (!migratedData.certifications) migratedData.certifications = initialData.certifications;
   if (!migratedData.extracurricular) migratedData.extracurricular = initialData.extracurricular;
+  if (!migratedData.languages) migratedData.languages = initialData.languages;
 
   // Add imageUrls if missing
   migratedData.certifications = (migratedData.certifications || []).map((cert: any) => ({
@@ -166,6 +168,12 @@ export const usePortfolioStore = create<PortfolioState>()(
       updateSoftSkills: (softSkills) =>
         set((state) => {
            const newState = { portfolio: { ...state.portfolio, softSkills } };
+           writeToDb(newState.portfolio);
+           return newState;
+        }),
+       updateLanguages: (languages) =>
+        set((state) => {
+           const newState = { portfolio: { ...state.portfolio, languages } };
            writeToDb(newState.portfolio);
            return newState;
         }),

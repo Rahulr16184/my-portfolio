@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { User, Info, Laptop, Briefcase, GraduationCap, Mail, Palette, Award, ToyBrick, HeartHandshake } from 'lucide-react';
+import { User, Info, Laptop, Briefcase, GraduationCap, Mail, Palette, Award, ToyBrick, HeartHandshake, Languages } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
@@ -12,6 +12,7 @@ const menuItems = [
   { href: '/admin/about', label: 'About Me', icon: Info },
   { href: '/admin/skills', label: 'Tech Skills', icon: Laptop },
   { href: '/admin/softskills', label: 'Soft Skills', icon: HeartHandshake },
+  { href: '/admin/languages', label: 'Languages', icon: Languages },
   { href: '/admin/projects', label: 'Projects', icon: Briefcase },
   { href: '/admin/experience', label: 'Experience', icon: Briefcase },
   { href: '/admin/certifications', label: 'Certifications', icon: Award },

@@ -7,6 +7,7 @@ import HeroSection from './sections/HeroSection';
 import AboutSection from './sections/AboutSection';
 import SkillsSection from './sections/SkillsSection';
 import SoftSkillsSection from './sections/SoftSkillsSection';
+import LanguagesSection from './sections/LanguagesSection';
 import ProjectsSection from './sections/ProjectsSection';
 import ExperienceSection from './sections/ExperienceSection';
 import CertificationsSection from './sections/CertificationsSection';
@@ -53,6 +54,8 @@ export default function PublicPortfolioPage() {
       <SkillsSection data={data.skills} />
       <AnimatedSeparator />
       <SoftSkillsSection data={data.softSkills} />
+      <AnimatedSeparator />
+      <LanguagesSection data={data.languages} />
       <AnimatedSeparator />
       <ProjectsSection data={data.projects} />
       <AnimatedSeparator />

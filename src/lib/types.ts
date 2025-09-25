@@ -1,4 +1,5 @@
 
+
 export interface Resume {
   id: string;
   name: string;
@@ -28,6 +29,14 @@ export interface Skills {
 export interface SoftSkill {
   id: string;
   skill: string;
+}
+
+export type LanguageProficiency = "Conversational" | "Professional" | "Fluent/Native";
+
+export interface Language {
+  id: string;
+  name: string;
+  proficiency: LanguageProficiency;
 }
 
 export interface Certification {
@@ -97,6 +106,7 @@ export interface PortfolioData {
   about: About;
   skills: Skills;
   softSkills: SoftSkill[];
+  languages: Language[];
   projects: Project[];
   experience: Experience[];
   certifications: Certification[];
