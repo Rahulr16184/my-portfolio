@@ -28,6 +28,7 @@
     --header-background: 0 0% 100%;
     --background-gradient-light: linear-gradient(to bottom right, hsl(180, 55%, 95%), hsl(200, 60%, 95%));
     --background-gradient-dark: linear-gradient(to bottom right, hsl(180, 40%, 15%), hsl(220, 40%, 15%));
+    --glow-color: hsl(0 0% 0%); /* Black glow for light mode */
   }
  
   .dark {
@@ -51,6 +52,7 @@
     --input: 210 30% 25%;
     --ring: var(--accent-dark); /* Use the dynamic dark accent for ring */
     --header-background: 210 30% 9.8%;
+    --glow-color: hsl(0 0% 100%); /* White glow for dark mode */
   }
 }
 
@@ -122,6 +124,21 @@
     background: linear-gradient(90deg, transparent, hsl(var(--accent)), transparent);
     background-size: 200% auto;
     animation: underline-shimmer 4s linear infinite;
+  }
+  
+  .animate-glow {
+    animation: blink-and-glow 2.5s ease-in-out infinite;
+  }
+
+  @keyframes blink-and-glow {
+    0%, 100% {
+      box-shadow: 0 0 2px 0px var(--glow-color);
+      opacity: 0.7;
+    }
+    50% {
+      box-shadow: 0 0 8px 3px var(--glow-color);
+      opacity: 1;
+    }
   }
 
   @keyframes text-shimmer {
