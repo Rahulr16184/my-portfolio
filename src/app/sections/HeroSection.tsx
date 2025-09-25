@@ -21,16 +21,14 @@ export default function HeroSection({ data }: HeroSectionProps) {
         <section id="home" className="text-center flex flex-col items-center section-padding">
             {data.profilePhoto && (
                 <div className="fade-in-up mb-4">
-                    <div className="profile-image-container">
-                      <Image
-                          src={data.profilePhoto}
-                          alt={data.name}
-                          width={150}
-                          height={150}
-                          className="rounded-full shadow-lg"
-                          priority
-                      />
-                    </div>
+                    <Image
+                        src={data.profilePhoto}
+                        alt={data.name}
+                        width={150}
+                        height={150}
+                        className="rounded-full shadow-lg"
+                        priority
+                    />
                 </div>
             )}
             <h1 className="text-5xl md:text-6xl font-headline font-headline mt-4 fade-in-up" style={{ animationDelay: '0.2s' }}>{data.name}</h1>
