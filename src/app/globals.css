@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -125,7 +126,7 @@
 
   .profile-image-container {
     position: relative;
-    padding: 5px; /* Adjust padding to control the distance of the border */
+    padding: 5px;
     border-radius: 50%;
   }
 
@@ -135,25 +136,20 @@
     inset: 0;
     border-radius: 50%;
     padding: 2px; /* Border thickness */
-    background: conic-gradient(from 0deg, rgba(255,255,255,0.8), rgba(255,255,255,0.3), rgba(255,255,255,0.8));
+    background: conic-gradient(from 180deg at 50% 50%, transparent 0%, white 30%, transparent 60%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    animation: rotate-glow 3s linear infinite;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+    animation: rotate-glow 2s linear infinite;
+    filter: drop-shadow(0 0 5px white);
   }
 
   @keyframes rotate-glow {
     from {
       transform: rotate(0deg);
-      opacity: 0.8;
-    }
-    50% {
-      opacity: 1;
     }
     to {
       transform: rotate(360deg);
-      opacity: 0.8;
     }
   }
 
