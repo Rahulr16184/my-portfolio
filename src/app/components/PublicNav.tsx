@@ -42,7 +42,7 @@ export default function PublicNav() {
                     onClick={(e) => handleScroll(e, item.href)}
                     className={cn(
                         "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                        "text-muted-foreground hover:bg-muted"
+                        "text-muted-foreground hover:bg-primary hover:text-primary-foreground"
                     )}
                 >
                     <item.icon className="h-4 w-4" />
