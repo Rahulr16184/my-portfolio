@@ -2,7 +2,6 @@
 import { Profile } from "@/lib/types";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import ConfirmationDialog from "../components/ConfirmationDialog";
 
 interface HeroSectionProps {
     data: Profile;
@@ -25,7 +24,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
                         alt={data.name}
                         width={150}
                         height={150}
-                        className="rounded-full shadow-lg border-4 border-white dark:border-gray-800"
+                        className="rounded-full shadow-lg border-4 border-foreground/10 dark:border-background"
                         priority
                     />
                 </div>
