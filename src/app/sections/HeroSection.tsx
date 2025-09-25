@@ -1,4 +1,6 @@
 
+"use client";
+
 import { Profile } from "@/lib/types";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -19,7 +21,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
         <section id="home" className="text-center flex flex-col items-center section-padding">
             {data.profilePhoto && (
                 <div className="fade-in-up mb-4">
-                    <div className="relative profile-image-container">
+                    <div className="relative rounded-full p-2 border-4 border-black dark:border-white animate-glow">
                       <Image
                           src={data.profilePhoto}
                           alt={data.name}

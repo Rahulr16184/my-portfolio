@@ -126,36 +126,10 @@
     animation: underline-shimmer 4s linear infinite;
   }
 
-  /* Profile Image Border Animation */
-  .profile-image-container {
-    position: relative;
-    display: inline-block;
-  }
-
-  .profile-image-container::before {
-    content: "";
-    position: absolute;
-    inset: -4px; /* Controls border thickness and distance from image */
-    border-radius: 9999px;
-    background: conic-gradient(from 90deg, transparent 0% 25%, hsl(var(--glow-color)) 25% 100%);
-    -webkit-mask: radial-gradient(transparent calc(100% - 6px), #000 calc(100% - 5px));
-            mask: radial-gradient(transparent calc(100% - 6px), #000 calc(100% - 5px));
-    animation: rotate-glow 2.5s linear infinite, blink-and-glow 2.5s ease-in-out infinite;
-  }
-  
   .animate-glow {
     animation: blink-and-glow 2.5s ease-in-out infinite;
   }
   
-  @keyframes rotate-glow {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
   @keyframes blink-and-glow {
     0%, 100% {
       box-shadow: 0 0 2px 0px var(--glow-color);
