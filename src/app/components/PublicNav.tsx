@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -24,12 +24,14 @@ const navItems = [
 
 export default function PublicNav() {
   const [activeSection, setActiveSection] = useState('home');
+  const navLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string) => {
     e.preventDefault();
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    const targetId = href.substring(1);
+    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
     // Manually set active section on click for instant feedback
-    setActiveSection(href.substring(1));
+    setActiveSection(targetId);
   };
 
   const handleScrollSpy = useCallback(() => {
@@ -39,7 +41,7 @@ export default function PublicNav() {
     // Header height offset
     const offset = 150;
 
-    let currentSection = 'home';
+    let currentSection = '';
 
     for (const section of sections) {
         if (section) {
@@ -49,28 +51,45 @@ export default function PublicNav() {
         }
     }
     
-    // Check for bottom of page
+    // If scrolled to the bottom of the page, set the last nav item as active
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 20) {
-        currentSection = 'contact';
+        currentSection = navItems[navItems.length - 1].id;
+    } else if (scrollPosition < (document.getElementById(navItems[0].id)?.offsetTop || 0) - offset) {
+      // If scroll position is above the first section, set home as active
+        currentSection = 'home';
     }
     
-    setActiveSection(currentSection);
+    setActiveSection(currentSection || 'home');
   }, []);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScrollSpy);
+    // Initial check
+    handleScrollSpy();
     return () => {
       window.removeEventListener('scroll', handleScrollSpy);
     };
   }, [handleScrollSpy]);
 
+  useEffect(() => {
+    const activeIndex = navItems.findIndex(item => item.id === activeSection);
+    if (activeIndex !== -1 && navLinksRef.current[activeIndex]) {
+        navLinksRef.current[activeIndex]?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+        });
+    }
+  }, [activeSection]);
+
 
   return (
     <ScrollArea className="w-full whitespace-nowrap">
         <nav className="flex w-full justify-between items-center">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
                 <Link
                     key={item.href}
+                    ref={el => navLinksRef.current[index] = el}
                     href={item.href}
                     onClick={(e) => handleScrollTo(e, item.href)}
                     className={cn(
